@@ -25,6 +25,7 @@ defmodule IndieWeb.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.14", only: :dev},
+      {:microformats2, "~> 0.2.0"}
     ]
   end
 
