@@ -1,6 +1,6 @@
 # [IndieWeb][] Helpers for Elixir
 
-This library provides common logic for handling [IndieWeb][] actions and facades
+This library provides common logic for handling [IndieWeb][] [building blocks][] 
 in Elixir applications. This project is more commonly used in [Koype][],
 [Fortress][] and other IndieWeb projects by [Jacky Alcine][jacky].
 
@@ -14,7 +14,6 @@ so you can bring what you prefer to work with.
 * [ ] Metadata for common scopes used in the IndieWeb
 * [ ] Extraction of
  * [ ] [App information][h-x-app]
- * [ ] [Authorship][authorship]
  * [ ] [Post Type Discovery][ptd]
 * [ ] [Webmentions][wm]
  * [ ] [Sending][wm-send]
@@ -37,7 +36,6 @@ Koype is licensed under AGPLv3. The complete license text is available in the re
 [fortress]: https://fortress.black.af
 [jacky]: https://jacky.wtf
 [h-x-app]: https://indieweb.org/h-x-app
-[authorship]: https://indieweb.org/authorship
 [ptd]: https://indieweb.org/post-type-discovery
 [wm]: http://webmention.net/
 [wm-send]: https://www.w3.org/TR/webmention/#sending-webmentions
@@ -45,4 +43,5 @@ Koype is licensed under AGPLv3. The complete license text is available in the re
 [1]: https://indieauth.spec.indieweb.org/#token-endpoint-0
 [contrib]: ./CONTRIBUTING.markdown
 [coc]: ./CODE_OF_CONDUCT.markdown
+[building blocks]: http://indieweb.org/building-blocks
 [license]: ./LICENSE
