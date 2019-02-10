@@ -20,6 +20,18 @@ so you can bring what you prefer to work with.
  * [ ] [Sending][wm-send]
  * [ ] [Receiving][wm-rec]
 
+## Contributing
+
+Koype is a free and open source software project. For guidelines on contributing to the project
+as a developer, artist, translator, or however you wish to offer your time and skills, please
+read the [`CONTRIBUTING`][contrib] document (_TODO_).
+
+Participation in this project means adhering to our [Code of Conduct][coc].
+
+## License
+
+Koype is licensed under AGPLv3. The complete license text is available in the repository [here][license].
+
 [indieweb]: https://indieweb.org
 [koype]: https://koype.net
 [fortress]: https://fortress.black.af
@@ -31,3 +43,6 @@ so you can bring what you prefer to work with.
 [wm-send]: https://www.w3.org/TR/webmention/#sending-webmentions
 [wm-rec]: https://www.w3.org/TR/webmention/#receiving-webmentions
 [1]: https://indieauth.spec.indieweb.org/#token-endpoint-0
+[contrib]: ./CONTRIBUTING.markdown
+[coc]: ./CODE_OF_CONDUCT.markdown
+[license]: ./LICENSE
