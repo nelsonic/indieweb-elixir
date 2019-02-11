@@ -7,6 +7,7 @@ defmodule IndieWeb.MixProject do
       app: :elixir,
       version: "0.0.1",
       elixir: "~> 1.7",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       description: @description,
       package: package(),
@@ -25,7 +26,9 @@ defmodule IndieWeb.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.14", only: :dev},
-      {:microformats2, "~> 0.2.0"}
+      {:microformats2, "~> 0.2.0"},
+      {:exvcr, "~> 0.10", only: :test},
+      {:faker, "~> 0.12.0", only: :test},
     ]
   end
 
@@ -36,4 +39,8 @@ defmodule IndieWeb.MixProject do
       links: %{"Source Code" => "https://git.jacky.wtf/indieweb/elixir"}
     ]
   end
+
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end

@@ -34,7 +34,7 @@ defmodule Microformats2.Utiltiy do
       {prop, items} ->
         Stream.flat_map(items, fn
           item when is_map(item) ->
-            parse_item(item, format)
+            do_parse_item(item, format)
 
           _ ->
             []
@@ -42,5 +42,5 @@ defmodule Microformats2.Utiltiy do
     end)
   end
 
-  def do_extract_from_properties(_, _), do: []
+  defp do_extract_from_properties(_, _), do: []
 end
