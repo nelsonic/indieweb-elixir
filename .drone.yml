@@ -14,8 +14,10 @@ steps:
   image: elixir:1.7.4-alpine
   commands:
   - mix local.hex --force
+  - mix local.rebar --force
+  - mix deps.get
+  - mix do deps.compile, compile
   - mix test
-  - mix test.acceptance
   environment:
     MIX_ENV: test
   volumes:
