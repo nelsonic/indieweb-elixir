@@ -13,6 +13,7 @@ steps:
 - name: run tests
   image: elixir:1.7.4-alpine
   commands:
+  - apk add -U git
   - mix local.hex --force
   - mix local.rebar --force
   - mix deps.get
