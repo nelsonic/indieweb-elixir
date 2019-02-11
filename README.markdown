@@ -16,7 +16,7 @@ library. Every component is meant to work abstractly from HTTP and caching tools
 so you can bring what you prefer to work with.
 
 * [ ] Management for [IndieAuth tokens][1]
-* [ ] Metadata for common scopes used in the IndieWeb
+* [ ] Meta data for common scopes used in the IndieWeb
 * [ ] Extraction of
  * [ ] [App information][h-x-app]
  * [ ] [Post Type Discovery][ptd]
@@ -34,14 +34,14 @@ Participation in this project means adhering to our [Code of Conduct][coc].
 
 ## License
 
-Koype is licensed under AGPLv3. The complete license text is available in the repository [here][license].
+`indieweb` is licensed under the AGPLv3. The complete license text is available in the repository [here][license].
 
-## Finanical Support
+## Financial Support
 
-This project is used in publically open projects by [black.af](https://black.af).
-However, at the time of writing, not enoug funds are being raised in order to
+This project is used in publicly open projects by [black.af](https://black.af).
+However, at the time of writing, not enough funds are being raised in order to
 support this development. Become a backer on [Patreon][patreon] or [Liberapay][liberapay]
-to support this project finanically. _Anything_ helps!
+to support this project financially. _Anything_ helps!
 
 [indieweb]: https://indieweb.org
 [koype]: https://koype.net

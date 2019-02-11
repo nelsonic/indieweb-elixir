@@ -23,16 +23,16 @@ defmodule IndieWeb.HttpTest do
 
   describe ".request/2" do
     test "successfully sends a HTTP GET request by default" do
-      use_cassette :stub, [uri: "~r/*", method: :get] do
+      use_cassette :stub, uri: "~r/*", method: :get do
         assert {:ok, %IndieWeb.Http.Response{code: 200}} = Subject.request("https://indieweb.org")
       end
     end
 
     for method <- ~w(get post options head put patch delete)a do
       test "successfully sends a HTTP #{method} request" do
-
-        use_cassette :stub, [uri: "~r/*", method: unquote(method)] do
-          assert {:ok, %IndieWeb.Http.Response{}} = Subject.request("https://indieweb.org", unquote(method))
+        use_cassette :stub, uri: "~r/*", method: unquote(method) do
+          assert {:ok, %IndieWeb.Http.Response{}} =
+                   Subject.request("https://indieweb.org", unquote(method))
         end
       end
     end

@@ -27,10 +27,10 @@ defmodule IndieWeb.MixProject do
     [
       {:cachex, "~> 3.1"},
       {:ex_doc, "~> 0.14", only: :dev},
-      {:microformats2, "~> 0.2.0"},
       {:exvcr, "~> 0.10", only: :test},
-      {:inch_ex, github: "rrrene/inch_ex", only: [:dev, :test]}
       {:faker, "~> 0.12.0", only: :test},
+      {:inch_ex, github: "rrrene/inch_ex", only: [:dev, :test]},
+      {:microformats2, "~> 0.2.0"}
     ]
   end
 
@@ -41,7 +41,6 @@ defmodule IndieWeb.MixProject do
       links: %{"Source Code" => "https://git.jacky.wtf/indieweb/elixir"}
     ]
   end
-
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
