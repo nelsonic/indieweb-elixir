@@ -1,5 +1,7 @@
 # [IndieWeb][] Helpers for Elixir
 
+[![Build Status](https://ci.jacky.wtf/api/badges/indieweb/elixir/status.svg?ref=/refs/heads/develop)](https://ci.jacky.wtf/indieweb/elixir)
+
 This library provides common logic for handling [IndieWeb][] [building blocks][] 
 in Elixir applications. This project is more commonly used in [Koype][],
 [Fortress][] and other IndieWeb projects by [Jacky Alcine][jacky].
