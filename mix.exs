@@ -29,6 +29,7 @@ defmodule IndieWeb.MixProject do
       {:ex_doc, "~> 0.14", only: :dev},
       {:microformats2, "~> 0.2.0"},
       {:exvcr, "~> 0.10", only: :test},
+      {:inch_ex, github: "rrrene/inch_ex", only: [:dev, :test]}
       {:faker, "~> 0.12.0", only: :test},
     ]
   end

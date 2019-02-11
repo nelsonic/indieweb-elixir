@@ -1,6 +1,9 @@
 # [IndieWeb][] Helpers for Elixir
 
 [![Build Status](https://ci.jacky.wtf/api/badges/indieweb/elixir/status.svg?ref=refs/heads/develop)](https://ci.jacky.wtf/indieweb/elixir)
+[![License: AGPLv3](https://badgen.net/badge/license/AGPLv3/blue)](https://choosealicense.com/licenses/agpl-3.0/)
+[![Fund Development](https://badgen.net/badge/fund/on%20patreon/F96854)](http://patreon.com/jackyalcine/)
+[![Fund Development](https://badgen.net/badge/fund/on%20liberapay/FFDC00)](http://liberapay.com/jackyalcine/)
 
 This library provides common logic for handling [IndieWeb][] [building blocks][] 
 in Elixir applications. This project is more commonly used in [Koype][],
@@ -33,6 +36,13 @@ Participation in this project means adhering to our [Code of Conduct][coc].
 
 Koype is licensed under AGPLv3. The complete license text is available in the repository [here][license].
 
+## Finanical Support
+
+This project is used in publically open projects by [black.af](https://black.af).
+However, at the time of writing, not enoug funds are being raised in order to
+support this development. Become a backer on [Patreon][patreon] or [Liberapay][liberapay]
+to support this project finanically. _Anything_ helps!
+
 [indieweb]: https://indieweb.org
 [koype]: https://koype.net
 [fortress]: https://fortress.black.af
@@ -47,3 +57,5 @@ Koype is licensed under AGPLv3. The complete license text is available in the re
 [coc]: ./CODE_OF_CONDUCT.markdown
 [building blocks]: http://indieweb.org/building-blocks
 [license]: ./LICENSE
+[patreon]: http://patreon.com/jackyalcine
+[liberapay]: http://liberapay.com/jackyalcine/
