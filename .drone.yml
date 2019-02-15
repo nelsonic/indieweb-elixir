@@ -1,0 +1,43 @@
+---
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  depth: 1
+
+steps:
+- name: run tests
+  image: elixir:1.7.4-alpine
+  commands:
+  - apk add -U git
+  - mix local.hex --force
+  - mix local.rebar --force
+  - mix deps.get
+  - mix do deps.compile, compile
+  - mix test
+  environment:
+    MIX_ENV: test
+  volumes:
+    - name: deps
+      path: /drone/src/deps
+    - name: _build
+      path: /drone/src/_build
+    - name: root_mix
+      path: /root/.mix
+    - name: root_cache
+      path: /root/.cache
+
+volume:
+  - name: deps
+    host:
+      path: /ci-cache/indieweb/koype/deps
+  - name: _build
+    host:
+      path: /ci-cache/indieweb/koype/build
+  - name: root_mix
+    host:
+      path: /ci-cache/indieweb/koype/mix
