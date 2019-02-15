@@ -1,4 +1,3 @@
 defmodule IndieWeb.Http.Adapter do
-  @callback
-  def request(method, uri, opts)
+  @callback request(uri :: binary(), method :: atom(), opts :: keyword()) :: {:ok, IndieWeb.Http.Response.t} | {:error, IndieWeb.Http.Error.t}
 end

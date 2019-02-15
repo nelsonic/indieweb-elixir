@@ -1,4 +1,5 @@
 defmodule IndieWeb.Cache.Adapters.Cachex do
+  @behaviour IndieWeb.Cache.Adapter
   def get(key) do
     case Cachex.get(:indieweb, key) do
       {:ok, value} when not is_nil(value) -> value

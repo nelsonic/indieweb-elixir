@@ -1,4 +1,5 @@
 defmodule IndieWeb.Http.Adapters.HTTPotion do
+  @behaviour IndieWeb.Http.Adapter
   @impl true
   def request(uri, method, opts) do
     options = [
