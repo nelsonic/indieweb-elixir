@@ -31,7 +31,7 @@ defmodule Microformats2.Utiltiy do
 
   defp do_extract_from_properties(%{"properties" => properties}, format) do
     Stream.flat_map(properties, fn
-      {prop, items} ->
+      {_, items} ->
         Stream.flat_map(items, fn
           item when is_map(item) ->
             do_parse_item(item, format)

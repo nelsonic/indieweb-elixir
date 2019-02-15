@@ -1,10 +1,5 @@
 defmodule IndieWeb.Cache.Adapter do
-  @callback
-  def get(key)
-
-  @callback
-  def delete(key)
-
-  @callback
-  def set(key, value)
+  @callback get(key :: binary()) :: {:ok, any()} | {:error, any()}
+  @callback delete(key :: binary()) :: :ok | :error
+  @callback set(key :: binary(), value :: any()) :: :ok | :error
 end
