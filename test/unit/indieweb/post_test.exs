@@ -137,8 +137,7 @@ defmodule IndieWeb.PostTest do
       assert :note =
                Subject.determine_type(
                  %{
-                   "content" => %{"value" => ["Content value."]},
-                   "summary" => ["IndieWeb under your terms."]
+                   "content" => %{"value" => ["Content value."]}
                  },
                  [:note, :article]
                )

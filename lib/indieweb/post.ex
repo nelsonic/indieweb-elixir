@@ -47,11 +47,11 @@ defmodule IndieWeb.Post do
       :video in types ->
         :video
 
-      do_detect_article(properties) == true ->
-        :article
-
       do_detect_note(properties) == true ->
         :note
+
+      do_detect_article(properties) == true ->
+        :article
 
       true ->
         :note
@@ -60,13 +60,16 @@ defmodule IndieWeb.Post do
 
   @spec extract_types(map()) :: list()
   def extract_types(properties) do
-    types =
+    property_names =
       properties
       |> Map.keys()
       |> Enum.map(fn
-        key when is_binary(key) -> Map.get(@properties_to_kind, key, nil)
-        key when is_atom(key) -> Map.get(@properties_to_kind, Atom.to_string(key), nil)
+        key when is_binary(key) -> key
+        key -> to_string(key)
       end)
+
+    types = 
+      Enum.map(property_names,&(Map.get(@properties_to_kind, &1, nil)))
       |> Enum.reject(&is_nil/1)
 
     if types == [] do
@@ -79,14 +82,18 @@ defmodule IndieWeb.Post do
   defp do_detect_note(properties) do
     cond do
       Map.has_key?(properties, "name") == true -> false
-      String.trim(Enum.join(properties["name"])) != "" -> false
+      String.trim(Enum.join(Map.get(properties, "name", []))) != "" -> false
       true -> true
     end
   end
 
   defp do_detect_article(properties) do
-    content = properties["content"]["value"]
-    name = Map.get(properties, "name") |> Enum.map(&String.trim/1) |> Enum.join(" ")
-    List.starts_with?(content, [name])
+    content = cond do
+      properties["content"]["value"] != [] -> properties["content"]["value"]
+      properties["summary"]["value"] != [] -> properties["summary"]["value"]
+    end
+
+    name = Map.get(properties, "name", []) |> Enum.map(&String.trim/1) |> Enum.join(" ")
+    !List.starts_with?(content, [name]) and name != ""
   end
 end
