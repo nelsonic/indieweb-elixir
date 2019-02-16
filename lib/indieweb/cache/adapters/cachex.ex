@@ -1,5 +1,12 @@
 defmodule IndieWeb.Cache.Adapters.Cachex do
   @behaviour IndieWeb.Cache.Adapter
+  @moduledoc """
+  Wraps logic for using `Cachex` as the caching mechanism in `IndieWeb`.
+
+  NOTE: This uses the cache name `indieweb`.
+  """
+
+  @impl true
   def get(key) do
     case Cachex.get(:indieweb, key) do
       {:ok, value} when not is_nil(value) -> value
@@ -7,6 +14,7 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
     end
   end
 
+  @impl true
   def delete(key) do
     case Cachex.del(:indieweb, key) do
       {:ok, _} -> :ok
@@ -14,6 +22,7 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
     end
   end
 
+  @impl true
   def set(key, value) do
     case Cachex.put(:indieweb, key, value) do
       {:ok, _} -> :ok

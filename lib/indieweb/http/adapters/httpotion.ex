@@ -1,5 +1,6 @@
 defmodule IndieWeb.Http.Adapters.HTTPotion do
   @behaviour IndieWeb.Http.Adapter
+
   @impl true
   def request(uri, method, opts) do
     options = [
@@ -19,7 +20,7 @@ defmodule IndieWeb.Http.Adapters.HTTPotion do
 
       %HTTPotion.Response{} = resp ->
         {:ok,
-         %IndieWeb.Http.Response{code: resp.status_code, body: resp.body, headers: resp.headers}}
+         %IndieWeb.Http.Response{code: resp.status_code, body: resp.body, headers: resp.headers, raw: resp}}
     end
   end
 end

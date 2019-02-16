@@ -1,4 +1,87 @@
 defmodule IndieWeb.Post do
+  @moduledoc """
+  Post-specific logic for the IndieWeb.
+
+  This module provides helper methods for parsing [MF2](http://microformats.org/wiki/microformats2-parsing)
+  data in a handy and simple fashion. The structure of the properties you'd use would be similar
+  to that of a <abbr tittle="Micformats2 JSON">MF2+JSON</abbr> object:
+
+  ```json
+  {
+    "items": [
+        {
+            "type": [
+                "h-feed"
+            ],
+            "properties": {
+                "name": [
+                    "Updates"
+                ],
+                "uid": [
+                    "https://v2.jacky.wtf/stream"
+                ],
+                "url": [
+                    "https://v2.jacky.wtf/stream"
+                ]
+            },
+            "lang": "en",
+            "children": [
+                {
+                    "type": [
+                        "h-entry"
+                    ],
+                    "properties": {
+                        "summary": [
+                            "One big step for Koype is going to be bridging the IndieWeb into the IPFS landscape. I have concerns over it not being privacy-centric since there\u2019s no sense of private data (everything is publishable outwards). IPFS provides pubsub logic so I thi..."
+                        ],
+                        "url": [
+                            "https://v2.jacky.wtf/post/4fbdcd28-b558-42bc-99a9-802e33d01810",
+                            "https://v2.jacky.wtf/tag/7c1e5ef9-aa31-40e6-b26a-ecdba728b4a1",
+                            "https://v2.jacky.wtf/tag/bc945dde-95bb-468e-9127-620f1c35cd70"
+                        ],
+                        "uid": [
+                            "https://v2.jacky.wtf/post/4fbdcd28-b558-42bc-99a9-802e33d01810"
+                        ],
+                        "category": [
+                            "https://v2.jacky.wtf/tag/7c1e5ef9-aa31-40e6-b26a-ecdba728b4a1",
+                            "https://v2.jacky.wtf/tag/bc945dde-95bb-468e-9127-620f1c35cd70"
+                        ],
+                        "published": [
+                            "2019-02-15T13:29:51.60956-08:00"
+                        ]
+                    },
+                    "lang": "en"
+                }
+            ]
+        },
+        {
+            "type": [
+                "h-card"
+            ],
+            "properties": {
+                "name": [
+                    "Jacky Alcine"
+                ],
+                "tz": [
+                    "America/Los_Angeles"
+                ],
+                "note": [
+                    "I had a dream I could buy my way into heaven. When I woke up, I spent that on a m4.large from EvilCorp. Wait until I get my money right!"
+                ],
+                "url": [
+                    "https://v2.jacky.wtf"
+                ],
+                "photo": [
+                    "https://v2.jacky.wtf/media/image/floating/PhotoJacky%20n%203J5430.png?v=original"
+                ]
+            },
+            "lang": "en"
+        }
+    ]
+  }
+  ```
+  """
+
   @properties_to_kind %{
     "checkin" => :checkin,
     "audio" => :audio,
@@ -17,6 +100,27 @@ defmodule IndieWeb.Post do
     "name" => :article
   }
 
+  @doc """
+  Determines the type of a post from a set of types and its MF2 properties.
+
+  This aims to apply the [Post Type Discovery](http://ptd.spec.indieweb.org/) algorithm for discovering
+  what kind of post these properties result in.
+
+  ## Examples
+  
+
+      iex> IndieWeb.Post.determine_type(%{"content" => %{"value" => ["Foo."]}, "name" => ["Foo."]}, ~w(note article)a)
+      :note
+
+      iex> IndieWeb.Post.determine_type(%{"content" => %{"value" => ["Foo."]}, "name" => ["On Bar"]}, ~w(note article)a)
+      :article
+
+      iex> IndieWeb.Post.determine_type(%{"content" => %{"value" => ["Foo."]}, "photo" => ["https://magic/jpeg"]}, ~w(note photo)a)
+      :photo
+
+
+  """
+  @doc since: "http://ptd.spec.indieweb.org/#changes-from-28-october-2016-wd-to-1-march-2017-wd"
   @spec determine_type(map(), list()) :: atom()
   def determine_type(properties, types) do
     cond do
@@ -58,6 +162,24 @@ defmodule IndieWeb.Post do
     end
   end
 
+  @doc """
+  Determines the potential types exposed by the set of provided properties.
+
+  The provided properties are scanned and checked to determine if a particular
+  post type can be determined. The matching is a direct property to type mapping.
+  You should use `determine_type/2` to resolve the _actual_ post type.
+
+  ## Examples
+
+  iex> IndieWeb.Post.extract_types(%{"photo" => ["https://magic/jpeg"]})
+  [:photo]
+
+  iex> IndieWeb.Post.extract_types(%{"content" => %{"value" => ["Just a note."]}})
+  [:note]
+
+  iex> IndieWeb.Post.extract_types(%{"content" => %{"value" => ["A whole blog post."]}, "name" => ["Magic."]})
+  [:article]
+  """
   @spec extract_types(map()) :: list()
   def extract_types(properties) do
     property_names =
