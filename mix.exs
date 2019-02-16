@@ -4,25 +4,25 @@ defmodule IndieWeb.MixProject do
 
   def project do
     [
-      app: :elixir,
-      version: "0.0.5",
+      app: :indieweb,
+      name: "IndieWeb",
+      version: "0.0.6",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      build_embedded: Mix.env() == :prod,
       description: @description,
       package: package(),
       deps: deps()
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      applications: [:logger, :indieweb]
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:cachex, "~> 3.1"},
@@ -45,5 +45,3 @@ defmodule IndieWeb.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 end
-
-
