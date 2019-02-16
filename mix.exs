@@ -4,7 +4,7 @@ defmodule IndieWeb.MixProject do
 
   def project do
     [
-      app: :elixir,
+      app: :indieweb,
       name: "IndieWeb",
       version: "0.0.5",
       elixir: "~> 1.7",
