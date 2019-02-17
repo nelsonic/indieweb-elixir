@@ -82,6 +82,26 @@ defmodule IndieWeb.Post do
   ```
   """
 
+  @doc "Returns a list of atoms representing response post types."
+  @spec response_types() :: list(atom)
+  def response_types, do: ~w(reply like bookmark repost read rsvp)a
+
+  @doc """
+  Determines if the provided type is a response type.
+
+  ## Examples
+  
+      iex> IndieWeb.Post.is_response_type?(:note)
+      false
+  
+      iex> IndieWeb.Post.is_response_type?(:rsvp)
+      true
+  """
+  @spec is_response_type?(binary()) :: boolean()
+  def is_response_type?(type) do
+    Enum.member?(response_types(), type)
+  end
+
   @properties_to_kind %{
     "checkin" => :checkin,
     "audio" => :audio,
@@ -171,14 +191,14 @@ defmodule IndieWeb.Post do
 
   ## Examples
 
-  iex> IndieWeb.Post.extract_types(%{"photo" => ["https://magic/jpeg"]})
-  [:photo]
+      iex> IndieWeb.Post.extract_types(%{"photo" => ["https://magic/jpeg"]})
+      [:photo]
 
-  iex> IndieWeb.Post.extract_types(%{"content" => %{"value" => ["Just a note."]}})
-  [:note]
+      iex> IndieWeb.Post.extract_types(%{"content" => %{"value" => ["Just a note."]}})
+      [:note]
 
-  iex> IndieWeb.Post.extract_types(%{"content" => %{"value" => ["A whole blog post."]}, "name" => ["Magic."]})
-  [:article]
+      iex> IndieWeb.Post.extract_types(%{"content" => %{"value" => ["A whole blog post."]}, "name" => ["Magic."]})
+      [:article]
   """
   @spec extract_types(map()) :: list()
   def extract_types(properties) do

@@ -143,4 +143,14 @@ defmodule IndieWeb.PostTest do
                )
     end
   end
+
+  describe ".is_response_type?/1" do
+    test "determines valid post types" do
+      assert Subject.is_response_type?(:reply)
+      assert Subject.is_response_type?(:repost)
+      assert Subject.is_response_type?(:like)
+      refute Subject.is_response_type?(:note)
+      refute Subject.is_response_type?(:article)
+    end
+  end
 end
