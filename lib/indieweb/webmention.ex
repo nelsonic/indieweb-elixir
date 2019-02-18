@@ -26,7 +26,6 @@ defmodule IndieWeb.Webmention do
       if uris == [] do
         {:error, :no_endpoint_found}
       else
-        IO.puts(inspect(uris))
         uri = uris |> List.first |> do_normalize_webmention_endpoint_uri(page_url)
         {:ok, uri}
       end
@@ -37,7 +36,6 @@ defmodule IndieWeb.Webmention do
 
   defp do_extraction_from_headers(headers) when is_map(headers) do
     links = Map.take(headers, ["link", "Link"]) |> Map.values() |> List.flatten()
-    IO.puts(inspect(links))
 
     if !Enum.empty?(links) do
       Enum.map(links, fn link ->
