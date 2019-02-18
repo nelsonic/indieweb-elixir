@@ -11,7 +11,6 @@ defmodule IndieWeb.HttpTest do
 
   describe ".adapter/0" do
     test "pulls the one defined in configuration" do
-      Application.put_env(:indieweb, :http_adapter, IndieWeb.Test.HttpAdapter, persistent: true)
       assert Subject.adapter() == IndieWeb.Test.HttpAdapter
     end
 
@@ -33,6 +32,8 @@ defmodule IndieWeb.HttpTest do
         use_cassette :stub, uri: "~r/*", method: unquote(method) do
           assert {:ok, %IndieWeb.Http.Response{}} =
                    Subject.request("https://indieweb.org", unquote(method))
+          assert {:ok, %IndieWeb.Http.Response{}} =
+                   Subject.unquote(method)("https://indieweb.org")
         end
       end
     end
