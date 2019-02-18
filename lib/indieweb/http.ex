@@ -3,6 +3,8 @@ defmodule IndieWeb.Http do
   Provides a facade for handling HTTP actions.
   """
 
+  def timeout, do: 10_000
+
   @doc "Obtains an implementation of a `IndieWeb.Http.Adapter` module."
   @spec adapter() :: IndieWeb.HTTP.Adapter.t
   def adapter, do: Application.get_env(:indieweb, :http_adapter, IndieWeb.Http.Adapters.HTTPotion)
@@ -19,6 +21,6 @@ defmodule IndieWeb.Http do
     
     See `request/3` for more information about making requests.
     """
-    def unquote(method)(uri, opts), do: IndieWeb.Http.request(uri, unquote(method), opts)
+    def unquote(method)(uri, opts \\ []), do: IndieWeb.Http.request(uri, unquote(method), opts)
   end
 end
