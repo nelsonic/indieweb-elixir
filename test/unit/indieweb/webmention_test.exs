@@ -145,4 +145,29 @@ defmodule IndieWeb.WebmentionTest do
       end
     end
   end
+
+  describe ".send/3" do
+    test "successfully sends a Webmention"
+    test "fails if source URI could be obtained"
+    test "fails if no Webmention endpoint was found for target"
+  end
+
+  describe ".receive/1" do
+    test "successfully receives a Webmention"
+    test "fails if target URI does not resolve to anything"
+    test "marks incoming Webmention as vouch-able"
+    test "marks incoming Webmention as requiring authenticaton (private)"
+  end
+
+  describe ".resolve_target_from_url/1" do
+    test "generates URI for provided object"
+    test "fails if no adapter is set"
+    test "fails if adapter returns nil"
+  end
+
+  describe ".resolve_source_url/1" do
+    test "obtains object from URI"
+    test "fails if no adapter is set"
+    test "fails if adapter returns nil"
+  end
 end
