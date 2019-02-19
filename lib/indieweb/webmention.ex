@@ -11,7 +11,7 @@ defmodule IndieWeb.Webmention do
     @callback to_source_url(object :: any()) :: {:ok, URI.t()} | {:error, any()}
 
     @doc "Defines a means of obtaining a target from a URI."
-    @callback from_target_url(uri :: URI.t()) :: {:ok, any()} | {:error, any()}
+    @callback from_source_url(uri :: URI.t()) :: {:ok, any()} | {:error, any()}
   end
 
   defmodule SendResponse do
@@ -25,7 +25,7 @@ defmodule IndieWeb.Webmention do
 
   def resolve_target_from_url(target_url) do
     if url_adapter() != nil do
-      case url_adapter().from_target_url(target_url) do
+      case url_adapter().from_source_url(target_url) do
         nil -> {:error, :no_target}
         target -> {:ok, target}
       end

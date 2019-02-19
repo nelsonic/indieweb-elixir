@@ -202,7 +202,7 @@ defmodule IndieWeb.WebmentionTest do
                  target: "https://target.indieweb/fake"
                )
 
-      assert [from: "https://webmention.target/source", target: :fake_target] = resp
+      assert [from: "https://webmention.target/source", target: :fake_source] = resp
     end
 
     test "fails if target URI does not resolve to anything" do
@@ -221,7 +221,7 @@ defmodule IndieWeb.WebmentionTest do
 
   describe ".resolve_target_from_url/1" do
     test "generates URI for provided object" do
-      assert {:ok, :fake_target} = Subject.resolve_target_from_url("https://target.indieweb/fake")
+      assert {:ok, :fake_source} = Subject.resolve_target_from_url("https://target.indieweb/fake")
     end
 
     test "fails if no adapter is set" do
