@@ -1,0 +1,66 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": {
+        "ssl_options": {
+          "server_name_indication": [
+            104, 116, 116, 112, 115, 58, 47, 47, 119, 101, 98, 109, 101, 110, 116, 105,
+            111, 110, 46, 116, 97, 114, 103, 101, 116
+          ]
+        }
+      },
+      "request_body": "",
+      "url": "https://webmention.target/page"
+    },
+    "response": {
+      "binary": false,
+      "body": "<html><head><link rel='webmention' href='https://webmention.target/endpoint' /></head></html>",
+      "headers": {
+        "Server": "nginx/1.14.2",
+        "Date": "Mon, 18 Feb 2019 04:47:42 GMT",
+        "Content-Type": "text/html; charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "post",
+      "options": {
+        "ssl_options": {
+          "server_name_indication": [
+            104, 116, 116, 112, 115, 58, 47, 47, 119, 101, 98, 109, 101, 110, 116, 105,
+            111, 110, 46, 116, 97, 114, 103, 101, 116
+          ]
+        }
+      },
+      "request_body": "source=https://",
+      "url": "https://webmention.target/endpoint"
+    },
+    "response": {
+      "binary": false,
+      "body": "ok",
+      "headers": {
+        "Server": "nginx/1.14.2",
+        "Date": "Mon, 18 Feb 2019 04:47:42 GMT",
+        "Content-Type": "text/html; charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST"
+      },
+      "status_code": 201,
+      "type": "ok"
+    }
+  }
+]

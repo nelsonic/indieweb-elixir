@@ -8,10 +8,10 @@ defmodule IndieWeb.Webmention do
     Facility for handling URI generation of Webmention logic.
     """
     @doc "Defines a means of generating a URI from the provided value."
-    @callback to_source_url(object :: any()) :: {:ok, URI.t} | {:error, any()}
+    @callback to_source_url(object :: any()) :: {:ok, URI.t()} | {:error, any()}
 
     @doc "Defines a means of obtaining a target from a URI."
-    @callback from_target_url(uri :: URI.t) :: {:ok, any()} | {:error, any()}
+    @callback from_target_url(uri :: URI.t()) :: {:ok, any()} | {:error, any()}
   end
 
   defmodule SendResponse do
@@ -20,11 +20,31 @@ defmodule IndieWeb.Webmention do
   end
 
   @doc "Defines the adpater to use to resolve URI and source content."
-  @spec url_adapter() :: __MODULE__.URIAdapter.t
+  @spec url_adapter() :: __MODULE__.URIAdapter.t()
   def url_adapter, do: Application.get_env(:indieweb, :webmention_url_adapter)
 
-  def resolve_target_from_url(target_url)
-  def resolve_source_url(source)
+  def resolve_target_from_url(target_url) do
+    if url_adapter() != nil do
+      case url_adapter().from_target_url(target_url) do
+        nil -> {:error, :no_target}
+        target -> {:ok, target}
+      end
+    else
+        {:error, :no_adapter}
+    end
+  end
+
+  def resolve_source_url(source) do
+    if url_adapter() != nil do
+      case url_adapter().to_source_url(source) do
+        nil -> {:error, :no_source}
+        %URI{} = url -> {:ok, url}
+        _ -> {:error, :invalid_url}
+      end
+    else
+        {:error, :no_adapter}
+    end
+  end
 
   @doc """
   Finds the Webmention endpoint of the provided URI.
@@ -39,8 +59,7 @@ defmodule IndieWeb.Webmention do
   @spec discover_endpoint(binary) :: {:ok, binary()} | {:error, any()}
   def discover_endpoint(page_url) do
     with(
-      {:ok, %IndieWeb.Http.Response{code: code, headers: headers, body: body}}
-      when code < 299 and code >= 200 <- IndieWeb.Http.get(page_url),
+      {:ok, %IndieWeb.Http.Response{code: code, headers: headers, body: body}} when code < 299 and code >= 200 <- IndieWeb.Http.get(page_url),
       %{rels: rels} = page_mf2 when is_map(page_mf2) <- Microformats2.parse(body, page_url)
     ) do
       webmention_uris = Map.get(rels, "webmention", []) || []
@@ -65,8 +84,27 @@ defmodule IndieWeb.Webmention do
 
   [1]: https://www.w3.org/TR/webmention
   """
-  @spec send(binary(), any()) :: {:ok, IndieWeb.Webmention.SendResponse.t} | {:error, any()}
-  def send(_target_url, _source) do
+  @spec send(binary(), any()) :: {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
+  def send(target_url, source) do
+    with(
+      {:ok, source_url} <- resolve_source_url(source),
+      {:ok, endpoint_url} <- discover_endpoint(target_url),
+      {:ok, resp} <- IndieWeb.Http.post(endpoint_url,
+        body: %{"source" => source_url, "target" => target_url},
+        headers: %{"Content-Type" => "application/x-www-form-urlencoded"}
+      )
+    ) do
+      send_resp = %SendResponse{
+        target: target_url,
+        source: source_url,
+        code: resp.code,
+        status: :accepted
+      }
+
+      {:ok, send_resp}
+    else
+      {:error, error} -> {:error, :webmention_send_failure, reason: error}
+    end
   end
 
   @doc """
@@ -76,10 +114,10 @@ defmodule IndieWeb.Webmention do
   a valid action to take from it.
   """
   @spec receive(map()) :: {:ok, action: atom(), args: map()} | {:error, any()}
-  def receive(_params) do
-  end
+    def receive(_params) do
+    end
 
-  defp do_extraction_from_headers(headers) when is_map(headers) do
+    defp do_extraction_from_headers(headers) when is_map(headers) do
     links = Map.take(headers, ["link", "Link"]) |> Map.values() |> List.flatten()
 
     if !Enum.empty?(links) do
@@ -111,14 +149,14 @@ defmodule IndieWeb.Webmention do
         %{host: host, scheme: scheme} = URI.parse(page_url)
         URI.parse(scheme <> "://" <> host <> url) |> URI.to_string()
 
-      # Relative to the current page's path.
+        # Relative to the current page's path.
       %{host: nil, scheme: nil} == URI.parse(url) and !String.starts_with?(url, "/") ->
         page_url <> "/" <> url
 
       url == "" ->
         page_url
 
-      # It's good enough!
+        # It's good enough!
       true ->
         url
     end
