@@ -184,18 +184,38 @@ defmodule IndieWeb.WebmentionTest do
     end
 
     test "fails if source URI could be obtained" do
-      assert {:error, :webmention_send_failure, reason: :no_source} = Subject.send("https://webmention.target/page", :bad_test_source)
+      assert {:error, :webmention_send_failure, reason: :no_source} =
+               Subject.send("https://webmention.target/page", :bad_test_source)
     end
 
     test "fails if no Webmention endpoint was found for target" do
-      assert {:error, :webmention_send_failure, reason: :no_endpoint_found} = Subject.send("https://webmention.target/page?no=endpoint", :fake_source)
+      assert {:error, :webmention_send_failure, reason: :no_endpoint_found} =
+               Subject.send("https://webmention.target/page?no=endpoint", :fake_source)
     end
   end
 
   describe ".receive/1" do
-    test "successfully receives a Webmention"
-    test "fails if target URI does not resolve to anything"
+    test "successfully receives a Webmention" do
+      assert {:ok, resp} =
+               Subject.receive(
+                 source: "https://webmention.target/source",
+                 target: "https://target.indieweb/fake"
+               )
+
+      assert [from: "https://webmention.target/source", target: :fake_target] = resp
+    end
+
+    test "fails if target URI does not resolve to anything" do
+      assert {:error, :webmention_receive_failure, reason: :no_target} = Subject.receive(
+        source: "https://webmention.target/source",
+        target: "https://target.indieweb/goes/nowhere"
+      )
+    end
+
+    @tag skip: true
     test "marks incoming Webmention as vouch-able"
+
+    @tag skip: true
     test "marks incoming Webmention as requiring authenticaton (private)"
   end
 
@@ -207,8 +227,7 @@ defmodule IndieWeb.WebmentionTest do
     test "fails if no adapter is set" do
       Application.delete_env(:indieweb, :webmention_url_adapter)
 
-      assert {:error, :no_adapter} =
-               Subject.resolve_target_from_url("https://target.indieweb/fake")
+      assert {:error, :no_adapter} = Subject.resolve_target_from_url("https://target.indieweb/fake")
     end
 
     test "fails if adapter returns nil" do
@@ -221,10 +240,12 @@ defmodule IndieWeb.WebmentionTest do
       uri = URI.parse("https://source.indieweb/fake")
       assert {:ok, ^uri} = Subject.resolve_source_url(:fake_source)
     end
+
     test "fails if no adapter is set" do
       Application.delete_env(:indieweb, :webmention_url_adapter)
       assert {:error, :no_adapter} = Subject.resolve_source_url(:fake_source)
     end
+
     test "fails if adapter returns nil" do
       assert {:error, :no_source} = Subject.resolve_source_url(:no_source)
     end

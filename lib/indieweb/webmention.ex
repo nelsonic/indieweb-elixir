@@ -30,7 +30,7 @@ defmodule IndieWeb.Webmention do
         target -> {:ok, target}
       end
     else
-        {:error, :no_adapter}
+      {:error, :no_adapter}
     end
   end
 
@@ -42,7 +42,7 @@ defmodule IndieWeb.Webmention do
         _ -> {:error, :invalid_url}
       end
     else
-        {:error, :no_adapter}
+      {:error, :no_adapter}
     end
   end
 
@@ -59,7 +59,8 @@ defmodule IndieWeb.Webmention do
   @spec discover_endpoint(binary) :: {:ok, binary()} | {:error, any()}
   def discover_endpoint(page_url) do
     with(
-      {:ok, %IndieWeb.Http.Response{code: code, headers: headers, body: body}} when code < 299 and code >= 200 <- IndieWeb.Http.get(page_url),
+      {:ok, %IndieWeb.Http.Response{code: code, headers: headers, body: body}}
+      when code < 299 and code >= 200 <- IndieWeb.Http.get(page_url),
       %{rels: rels} = page_mf2 when is_map(page_mf2) <- Microformats2.parse(body, page_url)
     ) do
       webmention_uris = Map.get(rels, "webmention", []) || []
@@ -89,10 +90,11 @@ defmodule IndieWeb.Webmention do
     with(
       {:ok, source_url} <- resolve_source_url(source),
       {:ok, endpoint_url} <- discover_endpoint(target_url),
-      {:ok, resp} <- IndieWeb.Http.post(endpoint_url,
-        body: %{"source" => source_url, "target" => target_url},
-        headers: %{"Content-Type" => "application/x-www-form-urlencoded"}
-      )
+      {:ok, resp} <-
+        IndieWeb.Http.post(endpoint_url,
+          body: %{"source" => source_url, "target" => target_url},
+          headers: %{"Content-Type" => "application/x-www-form-urlencoded"}
+        )
     ) do
       send_resp = %SendResponse{
         target: target_url,
@@ -113,11 +115,17 @@ defmodule IndieWeb.Webmention do
   This aims to resolve the target of an incoming Webmention and determine if there's
   a valid action to take from it.
   """
-  @spec receive(map()) :: {:ok, action: atom(), args: map()} | {:error, any()}
-    def receive(_params) do
+  @spec receive(map()) :: {:ok, [action: atom(), args: map()]} | {:error, any()}
+  def receive([source: source_url, target: target_url] = _args) do
+    case resolve_target_from_url(target_url) do
+      {:ok, target} ->
+        {:ok, [from: source_url, target: target]}
+      {:error, error} ->
+        {:error, :webmention_receive_failure, reason: error}
     end
+  end
 
-    defp do_extraction_from_headers(headers) when is_map(headers) do
+  defp do_extraction_from_headers(headers) when is_map(headers) do
     links = Map.take(headers, ["link", "Link"]) |> Map.values() |> List.flatten()
 
     if !Enum.empty?(links) do
@@ -149,14 +157,14 @@ defmodule IndieWeb.Webmention do
         %{host: host, scheme: scheme} = URI.parse(page_url)
         URI.parse(scheme <> "://" <> host <> url) |> URI.to_string()
 
-        # Relative to the current page's path.
+      # Relative to the current page's path.
       %{host: nil, scheme: nil} == URI.parse(url) and !String.starts_with?(url, "/") ->
         page_url <> "/" <> url
 
       url == "" ->
         page_url
 
-        # It's good enough!
+      # It's good enough!
       true ->
         url
     end
