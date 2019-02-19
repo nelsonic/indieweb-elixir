@@ -17,9 +17,10 @@ defmodule IndieWeb do
 
   * `IndieWeb.Http.Adapter`
   * `IndieWeb.Cache.Adapter`
+  * `IndieWeb.Webmention.URIAdapter`
 
   ### Default Adapters
   This library ships with support for `HTTPotion` via `IndieWeb.Http.Adapters.HTTPotion` and
-  `Cachex` via `IndieWeb.Cache.Adapters.Cachex`.
+  `Cachex` via `IndieWeb.Cache.Adapters.Cachex`. There's no default adapter for resolving URIs for Webmentions.
   """
 end
