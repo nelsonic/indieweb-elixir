@@ -58,24 +58,9 @@ defmodule IndieWeb.Webmention do
   """
   @spec discover_endpoint(binary) :: {:ok, binary()} | {:error, any()}
   def discover_endpoint(page_url) do
-    with(
-      {:ok, %IndieWeb.Http.Response{code: code, headers: headers, body: body}}
-      when code < 299 and code >= 200 <- IndieWeb.Http.get(page_url),
-      %{rels: rels} = page_mf2 when is_map(page_mf2) <- Microformats2.parse(body, page_url)
-    ) do
-      webmention_uris = Map.get(rels, "webmention", []) || []
-
-      header_webmention_uris = headers |> IndieWeb.Http.extract_link_header_values() |> Map.get("webmention", [])
-
-      uris = header_webmention_uris ++ webmention_uris
-
-      if uris == [] do
-        {:error, :no_endpoint_found}
-      else
-        uri = uris |> List.first() |> do_normalize_webmention_endpoint_uri(page_url)
-        {:ok, uri}
-      end
-    else
+    case IndieWeb.LinkRel.find(page_url, "webmention") do
+      list when length(list) != 0 ->
+        {:ok, List.first(list)}
       _ -> {:error, :no_endpoint_found}
     end
   end
@@ -126,26 +111,6 @@ defmodule IndieWeb.Webmention do
 
       {:error, error} ->
         {:error, :webmention_receive_failure, reason: error}
-    end
-  end
-
-  defp do_normalize_webmention_endpoint_uri(url, page_url) when is_binary(url) do
-    cond do
-      # Relative to the site itself.
-      String.starts_with?(url, "/") ->
-        %{host: host, scheme: scheme} = URI.parse(page_url)
-        URI.parse(scheme <> "://" <> host <> url) |> URI.to_string()
-
-      # Relative to the current page's path.
-      %{host: nil, scheme: nil} == URI.parse(url) and !String.starts_with?(url, "/") ->
-        page_url <> "/" <> url
-
-      url == "" ->
-        page_url
-
-      # It's good enough!
-      true ->
-        url
     end
   end
 end
