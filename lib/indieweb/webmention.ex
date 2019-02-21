@@ -64,7 +64,10 @@ defmodule IndieWeb.Webmention do
       %{rels: rels} = page_mf2 when is_map(page_mf2) <- Microformats2.parse(body, page_url)
     ) do
       webmention_uris = Map.get(rels, "webmention", []) || []
-      uris = do_extraction_from_headers(headers) ++ webmention_uris
+
+      header_webmention_uris = headers |> IndieWeb.Http.extract_link_header_values() |> Map.get("webmention", [])
+
+      uris = header_webmention_uris ++ webmention_uris
 
       if uris == [] do
         {:error, :no_endpoint_found}
@@ -120,35 +123,11 @@ defmodule IndieWeb.Webmention do
     case resolve_target_from_url(target_url) do
       {:ok, target} ->
         {:ok, [from: source_url, target: target]}
+
       {:error, error} ->
         {:error, :webmention_receive_failure, reason: error}
     end
   end
-
-  defp do_extraction_from_headers(headers) when is_map(headers) do
-    links = Map.take(headers, ["link", "Link"]) |> Map.values() |> List.flatten()
-
-    if !Enum.empty?(links) do
-      Enum.map(links, fn link ->
-        link
-        |> String.split(",")
-        |> Enum.map(fn v ->
-          String.split(v, ";") |> Enum.map(fn f -> String.trim(f) end)
-        end)
-        |> Enum.filter(fn [_, rel | _] -> String.contains?(rel, "webmention") end)
-        |> Enum.map(fn webmention_link_rel ->
-          webmention_link_rel
-          |> Enum.drop(-1)
-          |> Enum.map(&String.slice(&1, 1..-2))
-        end)
-      end)
-      |> List.flatten()
-    else
-      []
-    end
-  end
-
-  defp do_extraction_from_headers(_), do: nil
 
   defp do_normalize_webmention_endpoint_uri(url, page_url) when is_binary(url) do
     cond do
