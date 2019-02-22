@@ -55,7 +55,7 @@ defmodule IndieWeb.MixProject do
 
   defp aliases do
     [
-      ci: ["inch", "test", "coveralls.detail"]
+      ci: ["inch", "test --cover"]
     ]
   end
 end

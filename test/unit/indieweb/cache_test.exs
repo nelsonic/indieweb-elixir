@@ -1,6 +1,5 @@
 defmodule IndieWeb.CacheTest do
-  use IndieWeb.TestCase, async: false
-  use ExVCR.Mock
+  use IndieWeb.TestCase, async: true
   alias IndieWeb.Cache, as: Subject
   doctest Subject
 

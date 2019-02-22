@@ -1,5 +1,5 @@
 defmodule IndieWeb.AuthTest do
-  use IndieWeb.TestCase, async: false
+  use IndieWeb.TestCase, async: true
   use ExVCR.Mock
   alias IndieWeb.Auth, as: Subject
 

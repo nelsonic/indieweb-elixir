@@ -1,5 +1,5 @@
 defmodule IndieWeb.Auth.TokenTest do
-  use IndieWeb.TestCase, async: false
+  use IndieWeb.TestCase, async: true
   alias IndieWeb.Auth.Token, as: Subject
   alias IndieWeb.Test.AuthAdapter, as: TestAdapter
 
