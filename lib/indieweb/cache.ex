@@ -21,6 +21,6 @@ defmodule IndieWeb.Cache do
   def delete(key), do: adapter().delete(key)
 
   @doc "Sets the key `key` with the value `value` to the adapter."
-  @spec set(binary(), any()) :: :ok | :error
-  def set(key, value), do: adapter().set(key, value)
+  @spec set(binary(), any(), keyword()) :: :ok | :error
+  def set(key, value, options \\ []), do: adapter().set(key, value, options)
 end

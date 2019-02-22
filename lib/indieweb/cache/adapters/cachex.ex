@@ -23,9 +23,14 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
   end
 
   @impl true
-  def set(key, value) do
+  def set(key, value, options \\ []) do
     case Cachex.put(:indieweb, key, value) do
-      {:ok, _} -> :ok
+      {:ok, _} ->
+        if Keyword.has_key?(options, :expire) do
+          {:ok, _} = Cachex.expire(:indieweb, key, options[:expire])
+        end
+
+        :ok
       _ -> :error
     end
   end
