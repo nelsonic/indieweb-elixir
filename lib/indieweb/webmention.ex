@@ -58,21 +58,9 @@ defmodule IndieWeb.Webmention do
   """
   @spec discover_endpoint(binary) :: {:ok, binary()} | {:error, any()}
   def discover_endpoint(page_url) do
-    with(
-      {:ok, %IndieWeb.Http.Response{code: code, headers: headers, body: body}}
-      when code < 299 and code >= 200 <- IndieWeb.Http.get(page_url),
-      %{rels: rels} = page_mf2 when is_map(page_mf2) <- Microformats2.parse(body, page_url)
-    ) do
-      webmention_uris = Map.get(rels, "webmention", []) || []
-      uris = do_extraction_from_headers(headers) ++ webmention_uris
-
-      if uris == [] do
-        {:error, :no_endpoint_found}
-      else
-        uri = uris |> List.first() |> do_normalize_webmention_endpoint_uri(page_url)
-        {:ok, uri}
-      end
-    else
+    case IndieWeb.LinkRel.find(page_url, "webmention") do
+      list when length(list) != 0 ->
+        {:ok, List.first(list)}
       _ -> {:error, :no_endpoint_found}
     end
   end
@@ -120,53 +108,9 @@ defmodule IndieWeb.Webmention do
     case resolve_target_from_url(target_url) do
       {:ok, target} ->
         {:ok, [from: source_url, target: target]}
+
       {:error, error} ->
         {:error, :webmention_receive_failure, reason: error}
-    end
-  end
-
-  defp do_extraction_from_headers(headers) when is_map(headers) do
-    links = Map.take(headers, ["link", "Link"]) |> Map.values() |> List.flatten()
-
-    if !Enum.empty?(links) do
-      Enum.map(links, fn link ->
-        link
-        |> String.split(",")
-        |> Enum.map(fn v ->
-          String.split(v, ";") |> Enum.map(fn f -> String.trim(f) end)
-        end)
-        |> Enum.filter(fn [_, rel | _] -> String.contains?(rel, "webmention") end)
-        |> Enum.map(fn webmention_link_rel ->
-          webmention_link_rel
-          |> Enum.drop(-1)
-          |> Enum.map(&String.slice(&1, 1..-2))
-        end)
-      end)
-      |> List.flatten()
-    else
-      []
-    end
-  end
-
-  defp do_extraction_from_headers(_), do: nil
-
-  defp do_normalize_webmention_endpoint_uri(url, page_url) when is_binary(url) do
-    cond do
-      # Relative to the site itself.
-      String.starts_with?(url, "/") ->
-        %{host: host, scheme: scheme} = URI.parse(page_url)
-        URI.parse(scheme <> "://" <> host <> url) |> URI.to_string()
-
-      # Relative to the current page's path.
-      %{host: nil, scheme: nil} == URI.parse(url) and !String.starts_with?(url, "/") ->
-        page_url <> "/" <> url
-
-      url == "" ->
-        page_url
-
-      # It's good enough!
-      true ->
-        url
     end
   end
 end

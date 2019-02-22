@@ -12,5 +12,5 @@ defmodule IndieWeb.Cache.Adapter do
   @callback delete(key :: binary()) :: :ok | :error
 
   @doc "Defines the method of setting of a cached value."
-  @callback set(key :: binary(), value :: any()) :: :ok | :error
+  @callback set(key :: binary(), value :: any(), options :: keyword()) :: :ok | :error
 end
