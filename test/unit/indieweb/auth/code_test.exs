@@ -1,5 +1,5 @@
 defmodule IndieWeb.Auth.CodeTest do
-  use IndieWeb.TestCase, async: false
+  use IndieWeb.TestCase, async: true
   alias IndieWeb.Auth.Code, as: Subject
 
   setup do

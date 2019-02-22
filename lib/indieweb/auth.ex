@@ -2,14 +2,10 @@ defmodule IndieWeb.Auth do
   @moduledoc """
   Provides logic for handling [IndieAuth](https://indieauth.spec.indieweb.org) interactions.
   """
-  def adapter(), do: Application.get_env(:indieweb, :auth_adapter, IndieWeb.Auth.Adapters.Default)
 
-  defmodule Adapter do
-    @callback code_generate(client_id :: binary(), redirect_uri :: binary(), data :: map()) :: binary()
-    @callback code_persist(code :: binary(), client_id :: binary(), redirect_uri :: binary()) :: :ok | {:error, any()}
-    @callback scope_persist(code :: binary(), scope :: binary()) :: :ok | {:error, any()}
-    @callback valid_user?(uri :: binary()) :: boolean()
-  end
+  @doc "Provides the adapter to be used by `IndieWeb.Auth` for stateful actions."
+  @spec adapter() :: IndieWeb.Auth.Adapter.t
+  def adapter(), do: Application.get_env(:indieweb, :auth_adapter, IndieWeb.Auth.Adapters.Default)
 
   @doc "Provides endpoint information for well known endpoints in IndieAuth."
   @spec endpoint_for(atom(), binary()) :: binary() | nil

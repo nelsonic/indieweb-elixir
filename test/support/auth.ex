@@ -18,16 +18,16 @@ defmodule IndieWeb.Test.AuthAdapter do
   def code_verify(_, _, @redirect_uri <> "_wrong", _), do: {:error, :code_mismatch}
   def code_verify(_, _, _, _), do: :ok
 
-  def code_persist(_, _, "fails"), do: {:error, :test}
-  def code_persist(_, _, _), do: :ok
+  def code_persist(_, _, "fails", _), do: {:error, :test}
+  def code_persist(_, _, _, _), do: :ok
 
-  def code_destroy(_), do: :ok
+  def code_destroy(_, _, _), do: :ok
   def valid_user?(_), do: true
 
   def scope_get(@code <> "_no_scope"), do: nil
   def scope_get(_), do: "read"
 
-  def scope_persist(_), do: :ok
+  def scope_persist(_, _), do: :ok
 
   def token_generate(_, _), do: @token
 

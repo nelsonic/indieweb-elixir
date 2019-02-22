@@ -1,4 +1,6 @@
 defmodule Microformats2.Utiltiy do
+  @moduledoc false
+
   def get_format(mf2, format) do
     case Enum.fetch(extract_all(mf2, format), 0) do
       {:ok, mf2} -> mf2

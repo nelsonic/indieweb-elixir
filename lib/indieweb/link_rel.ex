@@ -1,4 +1,8 @@
 defmodule IndieWeb.LinkRel do
+  @moduledoc """
+  Provides a normalizer for link information.
+  """
+
   def find(url, value) do
     with(
       {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}} when code < 299 and code >= 200 <-
