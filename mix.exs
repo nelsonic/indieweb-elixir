@@ -14,6 +14,7 @@ defmodule IndieWeb.MixProject do
       build_embedded: Mix.env() == :prod,
       description: @description,
       package: package(),
+      test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         ci: :test
       ],
