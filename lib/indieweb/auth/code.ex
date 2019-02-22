@@ -1,4 +1,8 @@
 defmodule IndieWeb.Auth.Code do
+  @moduledoc """
+  Handles authentication codes for the IndieAuth flow.
+  """
+
   @spec generate(binary(), binary(), map()) :: binary()
   def generate(client_id, redirect_url, data \\ %{}) do
     IndieWeb.Auth.adapter().code_generate(client_id, redirect_url, data)

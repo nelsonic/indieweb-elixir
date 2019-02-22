@@ -1,4 +1,6 @@
 defmodule IndieWeb.Auth.Token do
+  @moduledoc "Manages the token lifecycle for IndieAuth."
+
   def generate(code, client_id, redirect_uri) do
     with(
       scope when is_binary(scope) <- IndieWeb.Auth.Scope.get(code),
