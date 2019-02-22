@@ -12,13 +12,15 @@ clone:
 steps:
 - name: run tests
   image: elixir:1.7.4-alpine
+  secrets:
+    - coveralls_repo_token
   commands:
-  - apk add -U git
-  - mix local.hex --force
-  - mix local.rebar --force
-  - mix deps.get
-  - mix do deps.compile, compile
-  - mix test
+    - apk add -U git
+    - mix local.hex --force
+    - mix local.rebar --force
+    - mix deps.get
+    - mix do deps.compile, compile
+    - mix ci
   environment:
     MIX_ENV: test
   volumes:
