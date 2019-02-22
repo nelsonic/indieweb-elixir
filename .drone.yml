@@ -12,8 +12,6 @@ clone:
 steps:
 - name: run tests
   image: elixir:1.7.4-alpine
-  secrets:
-    - coveralls_repo_token
   commands:
     - apk add -U git
     - mix local.hex --force
