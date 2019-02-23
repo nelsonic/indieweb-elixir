@@ -211,7 +211,8 @@ defmodule IndieWeb.Post do
       end)
 
     types = 
-      Enum.map(property_names,&(Map.get(@properties_to_kind, &1, nil)))
+      property_names
+      |> Enum.map(&(Map.get(@properties_to_kind, &1, nil)))
       |> Enum.reject(&is_nil/1)
 
     if types == [] do
@@ -233,9 +234,10 @@ defmodule IndieWeb.Post do
     content = cond do
       properties["content"]["value"] != [] -> properties["content"]["value"]
       properties["summary"]["value"] != [] -> properties["summary"]["value"]
+      true -> ""
     end
 
-    name = Map.get(properties, "name", []) |> Enum.map(&String.trim/1) |> Enum.join(" ")
+    name = properties |> Map.get("name", []) |> Enum.map(&String.trim/1) |> Enum.join(" ")
     !List.starts_with?(content, [name]) and name != ""
   end
 end
