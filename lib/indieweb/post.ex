@@ -129,8 +129,8 @@ defmodule IndieWeb.Post do
   ## Examples
 
 
-      iex> IndieWeb.Post.determine_type(%{"content" => %{"value" => ["Foo."]}, "name" => ["Foo."]}, ~w(note article)a)
-      :note
+      iex> IndieWeb.Post.determine_type(%{"content" => ["Foo."], "name" => ["Foo."]}, ~w(note article)a)
+      :article
 
       iex> IndieWeb.Post.determine_type(%{"content" => %{"value" => ["Foo."]}, "name" => ["On Bar"]}, ~w(note article)a)
       :article
@@ -248,6 +248,6 @@ defmodule IndieWeb.Post do
       |> Enum.map(&String.trim/1)
       |> Enum.join(" ")
 
-    is_binary(name) && name != "" && !List.starts_with?(content, [name])
+    is_binary(name) && name != "" && !List.starts_with?(summary || content, [name])
   end
 end
