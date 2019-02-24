@@ -31,7 +31,9 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
         end
 
         :ok
-      _ -> :error
+
+      _ ->
+        :error
     end
   end
 end

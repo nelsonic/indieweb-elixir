@@ -4,8 +4,14 @@ defmodule IndieWeb.Auth do
   """
 
   @doc "Provides the adapter to be used by `IndieWeb.Auth` for stateful actions."
-  @spec adapter() :: IndieWeb.Auth.Adapter.t
-  def adapter(), do: Application.get_env(:indieweb, :auth_adapter, IndieWeb.Auth.Adapters.Default)
+  @spec adapter() :: IndieWeb.Auth.Adapter.t()
+  def adapter(),
+    do:
+      Application.get_env(
+        :indieweb,
+        :auth_adapter,
+        IndieWeb.Auth.Adapters.Default
+      )
 
   @doc "Provides endpoint information for well known endpoints in IndieAuth."
   @spec endpoint_for(atom(), binary()) :: binary() | nil
@@ -15,7 +21,9 @@ defmodule IndieWeb.Auth do
     IndieWeb.LinkRel.find(url, "#{component}_endpoint") |> List.first()
   end
 
-  def endpoint_for(:redirect_uri, url), do: IndieWeb.LinkRel.find(url, "redirect_uri")
+  def endpoint_for(:redirect_uri, url),
+    do: IndieWeb.LinkRel.find(url, "redirect_uri")
+
   def endpoint_for(_, _), do: nil
 
   @spec authenticate(map()) :: {:ok, any()} | {:error, any()}
@@ -26,7 +34,12 @@ defmodule IndieWeb.Auth do
       {:error, _} = error ->
         error
 
-      {:ok, %{"client_id" => client_id, "redirect_uri" => redirect_uri, "state" => state}} ->
+      {:ok,
+       %{
+         "client_id" => client_id,
+         "redirect_uri" => redirect_uri,
+         "state" => state
+       }} ->
         code = IndieWeb.Auth.Code.generate(client_id, redirect_uri)
         do_generate_redirect_uri(redirect_uri, code, state)
     end
@@ -37,9 +50,19 @@ defmodule IndieWeb.Auth do
       {:error, _} = error ->
         error
 
-      {:ok, %{"client_id" => client_id, "redirect_uri" => redirect_uri, "state" => state} = args} ->
+      {:ok,
+       %{
+         "client_id" => client_id,
+         "redirect_uri" => redirect_uri,
+         "state" => state
+       } = args} ->
         scope = Map.get(args, "scope", "read")
-        code = IndieWeb.Auth.Code.generate(client_id, redirect_uri, %{"scope" => scope})
+
+        code =
+          IndieWeb.Auth.Code.generate(client_id, redirect_uri, %{
+            "scope" => scope
+          })
+
         do_generate_redirect_uri(redirect_uri, code, state)
     end
   end
@@ -51,7 +74,8 @@ defmodule IndieWeb.Auth do
       redirect_uri
       |> URI.parse()
       |> Map.get(:query)
-      |> (&(URI.decode_query(&1 || "", %{"code" => code, "state" => state}) |> URI.encode_query())).()
+      |> (&(URI.decode_query(&1 || "", %{"code" => code, "state" => state})
+            |> URI.encode_query())).()
 
     redirect_uri
     |> URI.parse()

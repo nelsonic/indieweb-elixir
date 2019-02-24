@@ -9,7 +9,11 @@ defmodule IndieWeb.PostTest do
     end
 
     test "detects a rsvp" do
-      assert [:rsvp] = Subject.extract_types(%{"rsvp" => ["yes"], "content" => %{"value" => ""}})
+      assert [:rsvp] =
+               Subject.extract_types(%{
+                 "rsvp" => ["yes"],
+                 "content" => %{"value" => ""}
+               })
     end
 
     test "detects a reply" do

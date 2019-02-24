@@ -15,7 +15,10 @@ defmodule IndieWeb.Test.AuthAdapter do
   def code_generate(_, _, _), do: @code
 
   def code_verify(_, @client_id <> "_wrong", _, _), do: {:error, :code_mismatch}
-  def code_verify(_, _, @redirect_uri <> "_wrong", _), do: {:error, :code_mismatch}
+
+  def code_verify(_, _, @redirect_uri <> "_wrong", _),
+    do: {:error, :code_mismatch}
+
   def code_verify(_, _, _, _), do: :ok
 
   def code_persist(_, _, "fails", _), do: {:error, :test}
@@ -33,7 +36,10 @@ defmodule IndieWeb.Test.AuthAdapter do
 
   def token_info(@token <> "_wrong_user"), do: {:error, :incorrect_me_for_token}
   def token_info(@token <> "_invalid"), do: {:error, :invalid_token}
-  def token_info(@token), do: %{"client_id" => @client_id, "me" => @me, "scope" => "create read"}
+
+  def token_info(@token),
+    do: %{"client_id" => @client_id, "me" => @me, "scope" => "create read"}
+
   def token_info(_), do: nil
 
   def token_revoke(@token <> "_invalid"), do: :error

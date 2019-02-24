@@ -4,13 +4,19 @@ defmodule IndieWeb.CacheTest do
   doctest Subject
 
   setup do
-    Application.put_env(:indieweb, :cache_adapter, IndieWeb.Test.CacheAdapter, persistent: true)
+    Application.put_env(:indieweb, :cache_adapter, IndieWeb.Test.CacheAdapter,
+      persistent: true
+    )
+
     :ok
   end
 
   describe ".adapter/0" do
     test "pulls the one defined in configuration" do
-      Application.put_env(:indieweb, :cache_adapter, IndieWeb.Test.CacheAdapter, persistent: true)
+      Application.put_env(:indieweb, :cache_adapter, IndieWeb.Test.CacheAdapter,
+        persistent: true
+      )
+
       assert Subject.adapter() == IndieWeb.Test.CacheAdapter
     end
 

@@ -4,7 +4,10 @@ defmodule IndieWeb.WebmentionTest do
   alias IndieWeb.Webmention, as: Subject
 
   setup do
-    Application.put_env(:indieweb, :webmention_url_adapter, IndieWeb.Test.WebmentionUrlAdapter,
+    Application.put_env(
+      :indieweb,
+      :webmention_url_adapter,
+      IndieWeb.Test.WebmentionUrlAdapter,
       persistent: true
     )
   end
@@ -13,56 +16,72 @@ defmodule IndieWeb.WebmentionTest do
     test "HTTP Link header, unquoted rel, relative URL" do
       use_cassette "webmention_test_header_unquoted_relative" do
         assert {:ok, "https://webmention.rocks/test/1/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/1")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/1"
+                 )
       end
     end
 
     test "HTTP Link header, unquoted rel, absolute URL" do
       use_cassette "webmention_test_header_unquoted_absolute" do
         assert {:ok, "https://webmention.rocks/test/2/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/2")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/2"
+                 )
       end
     end
 
     test "HTML <link> tag, relative URL" do
       use_cassette "webmention_test_tag_link_relative" do
         assert {:ok, "https://webmention.rocks/test/3/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/3")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/3"
+                 )
       end
     end
 
     test "HTML <link> tag, absolute URL" do
       use_cassette "webmention_test_tag_link_absolute" do
         assert {:ok, "https://webmention.rocks/test/4/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/4")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/4"
+                 )
       end
     end
 
     test "HTML <a> tag, relative URL" do
       use_cassette "webmention_test_tag_a_relative" do
         assert {:ok, "https://webmention.rocks/test/5/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/5")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/5"
+                 )
       end
     end
 
     test "HTML <a> tag, absolute URL" do
       use_cassette "webmention_test_tag_a_absolute" do
         assert {:ok, "https://webmention.rocks/test/6/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/6")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/6"
+                 )
       end
     end
 
     test "HTTP Link header with strange casing" do
       use_cassette "webmention_test_header_strange_casing" do
         assert {:ok, "https://webmention.rocks/test/7/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/7")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/7"
+                 )
       end
     end
 
     test "HTTP Link header, quoted rel" do
       use_cassette "webmention_test_header_quoted_rel" do
         assert {:ok, "https://webmention.rocks/test/8/webmention"} =
-                 IndieWeb.Webmention.discover_endpoint("https://webmention.rocks/test/8")
+                 IndieWeb.Webmention.discover_endpoint(
+                   "https://webmention.rocks/test/8"
+                 )
       end
     end
 
@@ -178,7 +197,9 @@ defmodule IndieWeb.WebmentionTest do
   describe ".send/3" do
     test "successfully sends a Webmention" do
       use_cassette "webmention_send_success" do
-        assert {:ok, send_resp} = Subject.send("https://webmention.target/page", :fake_source)
+        assert {:ok, send_resp} =
+                 Subject.send("https://webmention.target/page", :fake_source)
+
         assert %{code: 201} = send_resp
       end
     end
@@ -190,7 +211,10 @@ defmodule IndieWeb.WebmentionTest do
 
     test "fails if no Webmention endpoint was found for target" do
       assert {:error, :webmention_send_failure, reason: :no_endpoint_found} =
-               Subject.send("https://webmention.target/page?no=endpoint", :fake_source)
+               Subject.send(
+                 "https://webmention.target/page?no=endpoint",
+                 :fake_source
+               )
     end
   end
 
@@ -202,14 +226,16 @@ defmodule IndieWeb.WebmentionTest do
                  target: "https://target.indieweb/fake"
                )
 
-      assert [from: "https://webmention.target/source", target: :fake_source] = resp
+      assert [from: "https://webmention.target/source", target: :fake_source] =
+               resp
     end
 
     test "fails if target URI does not resolve to anything" do
-      assert {:error, :webmention_receive_failure, reason: :no_target} = Subject.receive(
-        source: "https://webmention.target/source",
-        target: "https://target.indieweb/goes/nowhere"
-      )
+      assert {:error, :webmention_receive_failure, reason: :no_target} =
+               Subject.receive(
+                 source: "https://webmention.target/source",
+                 target: "https://target.indieweb/goes/nowhere"
+               )
     end
 
     @tag skip: true
@@ -221,17 +247,20 @@ defmodule IndieWeb.WebmentionTest do
 
   describe ".resolve_target_from_url/1" do
     test "generates URI for provided object" do
-      assert {:ok, :fake_source} = Subject.resolve_target_from_url("https://target.indieweb/fake")
+      assert {:ok, :fake_source} =
+               Subject.resolve_target_from_url("https://target.indieweb/fake")
     end
 
     test "fails if no adapter is set" do
       Application.delete_env(:indieweb, :webmention_url_adapter)
 
-      assert {:error, :no_adapter} = Subject.resolve_target_from_url("https://target.indieweb/fake")
+      assert {:error, :no_adapter} =
+               Subject.resolve_target_from_url("https://target.indieweb/fake")
     end
 
     test "fails if adapter returns nil" do
-      assert {:error, :no_target} = Subject.resolve_target_from_url("https://target.indieweb/nil")
+      assert {:error, :no_target} =
+               Subject.resolve_target_from_url("https://target.indieweb/nil")
     end
   end
 

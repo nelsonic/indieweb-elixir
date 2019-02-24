@@ -15,14 +15,14 @@ The following is a list of components that are intended to be exposed by this
 library. Every component is meant to work abstractly from HTTP and caching tools
 so you can bring what you prefer to work with.
 
-* [ ] Management for [IndieAuth tokens][1]
+* [x] Management for [IndieAuth tokens][1]
 * [ ] Meta data for common scopes used in the IndieWeb
 * [ ] Extraction of
  * [ ] [App information][h-x-app]
  * [ ] [Post Type Discovery][ptd]
-* [ ] [Webmentions][wm]
- * [ ] [Sending][wm-send]
- * [ ] [Receiving][wm-rec]
+* [x] [Webmentions][wm]
+ * [x] [Sending][wm-send]
+ * [x] [Receiving][wm-rec]
 
 ## Contributing
 

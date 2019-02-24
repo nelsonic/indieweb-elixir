@@ -5,22 +5,26 @@ defmodule IndieWeb.LinkRel do
 
   def find(url, value) do
     with(
-      {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}} when code < 299 and code >= 200 <-
-        IndieWeb.Http.get(url)
+      {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}}
+      when code < 299 and code >= 200 <- IndieWeb.Http.get(url)
     ) do
-      header_endpoints = IndieWeb.Http.extract_link_header_values(headers) |> Map.get(value, [])
+      header_endpoints =
+        IndieWeb.Http.extract_link_header_values(headers) |> Map.get(value, [])
 
       rel_endpoints =
         case Microformats2.parse(body, url) do
           %{rel_urls: rel_url_map} ->
-            Enum.filter(rel_url_map, fn {_url, %{rels: rels}} -> value in rels end)
+            Enum.filter(rel_url_map, fn {_url, %{rels: rels}} ->
+              value in rels
+            end)
             |> Enum.map(fn {key, _} -> key end)
 
           _ ->
             []
         end
 
-      (header_endpoints ++ rel_endpoints) |> Enum.map(&do_normalize_url(&1, url))
+      (header_endpoints ++ rel_endpoints)
+      |> Enum.map(&do_normalize_url(&1, url))
     else
       _ -> []
     end
@@ -34,7 +38,8 @@ defmodule IndieWeb.LinkRel do
         URI.parse(scheme <> "://" <> host <> url) |> URI.to_string()
 
       # Relative to the current page's path.
-      %{host: nil, scheme: nil} == URI.parse(url) and !String.starts_with?(url, "/") ->
+      %{host: nil, scheme: nil} == URI.parse(url) and
+          !String.starts_with?(url, "/") ->
         page_url <> "/" <> url
 
       url == "" ->

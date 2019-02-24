@@ -9,8 +9,14 @@ defmodule IndieWeb.Cache do
   """
 
   @doc "Obtains an implementation of a `IndieWeb.Cache.Adapter` module."
-  @spec adapter() :: IndieWeb.Cache.Adapter.t
-  def adapter, do: Application.get_env(:indieweb, :cache_adapter, IndieWeb.Cache.Adapters.Cachex)
+  @spec adapter() :: IndieWeb.Cache.Adapter.t()
+  def adapter,
+    do:
+      Application.get_env(
+        :indieweb,
+        :cache_adapter,
+        IndieWeb.Cache.Adapters.Cachex
+      )
 
   @doc "Fetches the value defined by `key` from the adapter; returning `value` if it doesn't exist."
   @spec get(binary(), any()) :: any() | nil

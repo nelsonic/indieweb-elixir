@@ -61,7 +61,9 @@ defmodule IndieWeb.Webmention do
     case IndieWeb.LinkRel.find(page_url, "webmention") do
       list when length(list) != 0 ->
         {:ok, List.first(list)}
-      _ -> {:error, :no_endpoint_found}
+
+      _ ->
+        {:error, :no_endpoint_found}
     end
   end
 
@@ -73,7 +75,8 @@ defmodule IndieWeb.Webmention do
 
   [1]: https://www.w3.org/TR/webmention
   """
-  @spec send(binary(), any()) :: {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
+  @spec send(binary(), any()) ::
+          {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
   def send(target_url, source) do
     with(
       {:ok, source_url} <- resolve_source_url(source),
