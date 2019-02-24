@@ -110,7 +110,7 @@ defmodule IndieWeb.Webmention do
   def receive([source: source_url, target: target_url] = _args) do
     case resolve_target_from_url(target_url) do
       {:ok, target} ->
-        {:ok, [from: source_url, target: target]}
+        {:ok, [source: source_url, target: target, target_url: target_url]}
 
       {:error, error} ->
         {:error, :webmention_receive_failure, reason: error}

@@ -226,8 +226,11 @@ defmodule IndieWeb.WebmentionTest do
                  target: "https://target.indieweb/fake"
                )
 
-      assert [from: "https://webmention.target/source", target: :fake_source] =
-               resp
+      assert [
+               source: "https://webmention.target/source",
+               target: :fake_source,
+               target_url: "https://target.indieweb/fake"
+             ] = resp
     end
 
     test "fails if target URI does not resolve to anything" do

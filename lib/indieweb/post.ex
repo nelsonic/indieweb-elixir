@@ -234,9 +234,20 @@ defmodule IndieWeb.Post do
   defp do_detect_article(properties) do
     content =
       cond do
-        properties["content"]["value"] != [] -> properties["content"]["value"]
-        properties["summary"]["value"] != [] -> properties["summary"]["value"]
-        true -> ""
+        is_list(properties["content"]) && properties["content"] != [] ->
+          properties["content"]
+
+        is_list(properties["summary"]) && properties["summary"] != [] ->
+          properties["summary"]
+
+        properties["content"]["value"] != [] ->
+          properties["content"]["value"]
+
+        properties["summary"]["value"] != [] ->
+          properties["summary"]["value"]
+
+        true ->
+          ""
       end
 
     name =
