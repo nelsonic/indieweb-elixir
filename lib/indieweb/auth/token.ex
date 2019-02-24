@@ -4,7 +4,10 @@ defmodule IndieWeb.Auth.Token do
   def generate(code, client_id, redirect_uri) do
     with(
       scope when is_binary(scope) <- IndieWeb.Auth.Scope.get(code),
-      :ok <- IndieWeb.Auth.Code.verify(code, client_id, redirect_uri, %{"scope" => scope})
+      :ok <-
+        IndieWeb.Auth.Code.verify(code, client_id, redirect_uri, %{
+          "scope" => scope
+        })
     ) do
       IndieWeb.Auth.Code.destroy(client_id, redirect_uri, %{"scope" => scope})
       IndieWeb.Auth.adapter().token_generate(client_id, scope)

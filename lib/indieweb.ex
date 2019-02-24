@@ -1,7 +1,7 @@
 defmodule IndieWeb do
   @moduledoc """
   The IndieWeb is a people-focused alternative to the "corporate web". 
-  
+
   This library provides common facilities for handling interactions and 
   logic in the IndieWeb space. For more information; check out the open
   Wiki over at <https://indieweb.org>.

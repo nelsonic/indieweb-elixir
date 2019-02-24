@@ -10,6 +10,6 @@ defmodule IndieWeb.Auth.Scope do
 
   @spec get(binary()) :: binary() | nil
   def get(code) do
-    IndieWeb.Auth.adapter.scope_get(code)
+    IndieWeb.Auth.adapter().scope_get(code)
   end
 end

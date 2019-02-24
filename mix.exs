@@ -17,7 +17,7 @@ defmodule IndieWeb.MixProject do
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         ci: :test,
-        "coveralls.detail": :test,
+        "coveralls.detail": :test
       ],
       deps: deps()
     ]

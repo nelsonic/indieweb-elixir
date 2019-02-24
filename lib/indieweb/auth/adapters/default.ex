@@ -18,12 +18,18 @@ defmodule IndieWeb.Auth.Adapters.Default do
 
   @impl true
   def code_persist(code, client_id, redirect_uri, args) do
-    IndieWeb.Cache.set(do_make_key_for_client(client_id, redirect_uri, args), code, expire: @code_age)
+    IndieWeb.Cache.set(
+      do_make_key_for_client(client_id, redirect_uri, args),
+      code,
+      expire: @code_age
+    )
   end
 
   @impl true
   def code_verify(code, client_id, redirect_uri, args) do
-    case IndieWeb.Cache.get(do_make_key_for_client(client_id, redirect_uri, args)) do
+    case IndieWeb.Cache.get(
+           do_make_key_for_client(client_id, redirect_uri, args)
+         ) do
       {:ok, nil} ->
         {:error, :code_not_found}
 
@@ -66,7 +72,9 @@ defmodule IndieWeb.Auth.Adapters.Default do
   end
 
   def valid_user?(uri) do
-    resolve_user_fn = Application.get_env(:indieweb, :resolve_user_fn, fn _ -> true end)
+    resolve_user_fn =
+      Application.get_env(:indieweb, :resolve_user_fn, fn _ -> true end)
+
     resolve_user_fn.(uri)
   end
 
@@ -82,17 +90,20 @@ defmodule IndieWeb.Auth.Adapters.Default do
   end
 
   def token_generate(client_id, scope) do
-    IndieWeb.Cache.set(do_make_token(client_id, scope), URI.encode_query(%{"scope" => scope, "client_id" => client_id}))
+    IndieWeb.Cache.set(
+      do_make_token(client_id, scope),
+      URI.encode_query(%{"scope" => scope, "client_id" => client_id})
+    )
   end
 
   defp do_make_key_for_client(client_id, redirect_uri, args) do
     [
       client_id,
       redirect_uri,
-      args |> URI.encode_query
+      args |> URI.encode_query()
     ]
     |> Enum.join("_")
-    |> URI.encode_query
+    |> URI.encode_query()
     |> (fn data -> :erlang.phash(:indieweb_auth_code_key, :sha256) end).()
   end
 

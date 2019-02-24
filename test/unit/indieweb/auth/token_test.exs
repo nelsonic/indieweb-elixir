@@ -45,8 +45,11 @@ defmodule IndieWeb.Auth.TokenTest do
 
   describe ".info_for/1" do
     test "successfully fetches info about token" do
-      assert %{"me" => TestAdapter.me(), "client_id" => TestAdapter.client_id(), "scope" => "create read"} ==
-               Subject.info_for(TestAdapter.token())
+      assert %{
+               "me" => TestAdapter.me(),
+               "client_id" => TestAdapter.client_id(),
+               "scope" => "create read"
+             } == Subject.info_for(TestAdapter.token())
     end
 
     test "fails if token does not point to user" do

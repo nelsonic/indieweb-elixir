@@ -5,7 +5,10 @@ defmodule IndieWeb.HttpTest do
   doctest Subject
 
   setup do
-    Application.put_env(:indieweb, :http_adapter, IndieWeb.Test.HttpAdapter, persistent: true)
+    Application.put_env(:indieweb, :http_adapter, IndieWeb.Test.HttpAdapter,
+      persistent: true
+    )
+
     :ok
   end
 
@@ -23,7 +26,8 @@ defmodule IndieWeb.HttpTest do
   describe ".request/2" do
     test "successfully sends a HTTP GET request by default" do
       use_cassette :stub, uri: "~r/*", method: :get do
-        assert {:ok, %IndieWeb.Http.Response{code: 200}} = Subject.request("https://indieweb.org")
+        assert {:ok, %IndieWeb.Http.Response{code: 200}} =
+                 Subject.request("https://indieweb.org")
       end
     end
 
@@ -33,7 +37,8 @@ defmodule IndieWeb.HttpTest do
           assert {:ok, %IndieWeb.Http.Response{}} =
                    Subject.request("https://indieweb.org", unquote(method))
 
-          assert {:ok, %IndieWeb.Http.Response{}} = Subject.unquote(method)("https://indieweb.org")
+          assert {:ok, %IndieWeb.Http.Response{}} =
+                   Subject.unquote(method)("https://indieweb.org")
         end
       end
     end
@@ -59,7 +64,14 @@ defmodule IndieWeb.HttpTest do
         assert {:ok, resp} = IndieWeb.Http.head("https://v2.jacky.wtf")
         assert values = IndieWeb.Http.extract_link_header_values(resp.headers)
         assert %{"self" => ["https://v2.jacky.wtf"]} = values
-        assert %{"me" => ["https://playvicious.social/@jalcine", "https://twitter.com/jackyalcine", "https://www.instagram.com/jackyalcine/"]} = values
+
+        assert %{
+                 "me" => [
+                   "https://playvicious.social/@jalcine",
+                   "https://twitter.com/jackyalcine",
+                   "https://www.instagram.com/jackyalcine/"
+                 ]
+               } = values
       end
     end
   end

@@ -90,10 +90,10 @@ defmodule IndieWeb.Post do
   Determines if the provided type is a response type.
 
   ## Examples
-  
+
       iex> IndieWeb.Post.is_response_type?(:note)
       false
-  
+
       iex> IndieWeb.Post.is_response_type?(:rsvp)
       true
   """
@@ -127,7 +127,7 @@ defmodule IndieWeb.Post do
   what kind of post these properties result in.
 
   ## Examples
-  
+
 
       iex> IndieWeb.Post.determine_type(%{"content" => %{"value" => ["Foo."]}, "name" => ["Foo."]}, ~w(note article)a)
       :note
@@ -140,7 +140,8 @@ defmodule IndieWeb.Post do
 
 
   """
-  @doc since: "http://ptd.spec.indieweb.org/#changes-from-28-october-2016-wd-to-1-march-2017-wd"
+  @doc since:
+         "http://ptd.spec.indieweb.org/#changes-from-28-october-2016-wd-to-1-march-2017-wd"
   @spec determine_type(map(), list()) :: atom()
   def determine_type(properties, types) do
     cond do
@@ -210,9 +211,9 @@ defmodule IndieWeb.Post do
         key -> to_string(key)
       end)
 
-    types = 
+    types =
       property_names
-      |> Enum.map(&(Map.get(@properties_to_kind, &1, nil)))
+      |> Enum.map(&Map.get(@properties_to_kind, &1, nil))
       |> Enum.reject(&is_nil/1)
 
     if types == [] do
@@ -231,13 +232,19 @@ defmodule IndieWeb.Post do
   end
 
   defp do_detect_article(properties) do
-    content = cond do
-      properties["content"]["value"] != [] -> properties["content"]["value"]
-      properties["summary"]["value"] != [] -> properties["summary"]["value"]
-      true -> ""
-    end
+    content =
+      cond do
+        properties["content"]["value"] != [] -> properties["content"]["value"]
+        properties["summary"]["value"] != [] -> properties["summary"]["value"]
+        true -> ""
+      end
 
-    name = properties |> Map.get("name", []) |> Enum.map(&String.trim/1) |> Enum.join(" ")
+    name =
+      properties
+      |> Map.get("name", [])
+      |> Enum.map(&String.trim/1)
+      |> Enum.join(" ")
+
     !List.starts_with?(content, [name]) and name != ""
   end
 end
