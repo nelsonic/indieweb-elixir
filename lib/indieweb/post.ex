@@ -231,24 +231,16 @@ defmodule IndieWeb.Post do
     end
   end
 
+  defp do_flatten_content(content)
+  defp do_flatten_content([]), do: []
+  defp do_flatten_content(content) when is_list(content), do: content
+  defp do_flatten_content(content) when is_binary(content), do: [content]
+  defp do_flatten_content(%{"value" => value}) when is_list(value), do: value
+  defp do_flatten_content(%{"value" => value}) when is_binary(value), do: [value]
+
   defp do_detect_article(properties) do
-    content =
-      cond do
-        is_list(properties["content"]) && properties["content"] != [] ->
-          properties["content"]
-
-        is_list(properties["summary"]) && properties["summary"] != [] ->
-          properties["summary"]
-
-        properties["content"]["value"] != [] ->
-          properties["content"]["value"]
-
-        properties["summary"]["value"] != [] ->
-          properties["summary"]["value"]
-
-        true ->
-          ""
-      end
+    summary = do_flatten_content(Map.get(properties, "summary", []))
+    content = do_flatten_content(Map.get(properties, "content", []))
 
     name =
       properties
@@ -256,6 +248,6 @@ defmodule IndieWeb.Post do
       |> Enum.map(&String.trim/1)
       |> Enum.join(" ")
 
-    !List.starts_with?(content, [name]) and name != ""
+    is_binary(name) && name != "" && !List.starts_with?(content, [name])
   end
 end
