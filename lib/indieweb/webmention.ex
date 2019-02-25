@@ -95,7 +95,7 @@ defmodule IndieWeb.Webmention do
     with(
       {:ok, source_url} <- resolve_source_url(source),
       {:ok, resp} <-
-        IndieWeb.Http.post(endpoint_url,
+        IndieWeb.Http.post(endpoint,
           body: %{"source" => source_url, "target" => target_url},
           headers: %{"Content-Type" => "application/x-www-form-urlencoded"}
         )
