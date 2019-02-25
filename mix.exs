@@ -7,7 +7,7 @@ defmodule IndieWeb.MixProject do
       aliases: aliases(),
       app: :indieweb,
       name: "IndieWeb",
-      version: "0.0.17",
+      version: "0.0.18",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,

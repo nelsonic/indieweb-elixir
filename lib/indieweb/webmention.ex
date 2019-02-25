@@ -75,12 +75,25 @@ defmodule IndieWeb.Webmention do
 
   [1]: https://www.w3.org/TR/webmention
   """
-  @spec send(binary(), any()) ::
-          {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
+  @spec send(binary(), any()) :: {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
   def send(target_url, source) do
     with(
-      {:ok, source_url} <- resolve_source_url(source),
       {:ok, endpoint_url} <- discover_endpoint(target_url),
+      {:ok, resp} <- direct_send!(endpoint_url, target_url, source)
+    ) do
+      {:ok, resp}
+    else
+      {:error, error} -> {:error, :webmention_send_failure, reason: error}
+    end
+  end
+
+  @doc """
+  Sends out a Webmention to the provided `endpoint` for `target` from `source`.
+  """
+  @spec send(binary(), any()) :: {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
+  def direct_send!(endpoint, target_url, source) do
+    with(
+      {:ok, source_url} <- resolve_source_url(source),
       {:ok, resp} <-
         IndieWeb.Http.post(endpoint_url,
           body: %{"source" => source_url, "target" => target_url},
@@ -95,7 +108,7 @@ defmodule IndieWeb.Webmention do
       }
 
       {:ok, send_resp}
-    else
+   else
       {:error, error} -> {:error, :webmention_send_failure, reason: error}
     end
   end
