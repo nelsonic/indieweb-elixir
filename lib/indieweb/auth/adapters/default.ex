@@ -109,7 +109,6 @@ defmodule IndieWeb.Auth.Adapters.Default do
       args |> URI.encode_query()
     ]
     |> Enum.join("_")
-    |> URI.encode_query()
     |> (fn data -> :crypto.hash(data, :sha256) end).()
   end
 
