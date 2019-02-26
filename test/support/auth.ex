@@ -27,8 +27,10 @@ defmodule IndieWeb.Test.AuthAdapter do
   def code_destroy(_, _, _), do: :ok
   def valid_user?(_), do: true
 
-  def scope_get(@code <> "_no_scope"), do: nil
-  def scope_get(_), do: "read"
+  def scope_get(@code), do: ~w(read)
+  def scope_get(@code <> "_no_scope"), do: ~w()
+  def scope_get(@code <> "_not_real"), do: ~w()
+  def scope_get(_), do: ~w(read)
 
   def scope_persist(_, _), do: :ok
 
@@ -38,7 +40,7 @@ defmodule IndieWeb.Test.AuthAdapter do
   def token_info(@token <> "_invalid"), do: {:error, :invalid_token}
 
   def token_info(@token),
-    do: %{"client_id" => @client_id, "me" => @me, "scope" => "create read"}
+    do: %{"client_id" => @client_id, "me" => @me, "scope" => ~w(read)}
 
   def token_info(_), do: nil
 

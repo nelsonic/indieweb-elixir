@@ -48,7 +48,7 @@ defmodule IndieWeb.Auth.TokenTest do
       assert %{
                "me" => TestAdapter.me(),
                "client_id" => TestAdapter.client_id(),
-               "scope" => "create read"
+               "scope" => ~w(read),
              } == Subject.info_for(TestAdapter.token())
     end
 
