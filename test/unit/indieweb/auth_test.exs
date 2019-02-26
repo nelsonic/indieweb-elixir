@@ -3,12 +3,6 @@ defmodule IndieWeb.AuthTest do
   use ExVCR.Mock
   alias IndieWeb.Auth, as: Subject
 
-  setup do
-    Application.put_env(:indieweb, :auth_adapter, IndieWeb.Test.AuthAdapter,
-      persistent: true
-    )
-  end
-
   describe ".endpoint_for/2" do
     @endpoint "https://jacky.wtf/endpoint"
 
@@ -62,17 +56,10 @@ defmodule IndieWeb.AuthTest do
         "state" => "state"
       }
 
-      signed_url =
-        Enum.join([
-          @redirect_uri,
-          "?",
-          URI.encode_query(%{
-            "state" => params["state"],
-            "code" => IndieWeb.Test.AuthAdapter.code()
-          })
-        ])
+      obtained_uri = Subject.authenticate(params) |> URI.parse
+      obtained_query_params = URI.decode_query(obtained_uri.query)
 
-      assert signed_url == Subject.authenticate(params)
+      assert %{"state" => "state", "code" => _} = obtained_query_params
     end
 
     test "successfully generates a signed URI for generating an authorization code" do
@@ -85,17 +72,10 @@ defmodule IndieWeb.AuthTest do
         "state" => "state"
       }
 
-      signed_url =
-        Enum.join([
-          @redirect_uri,
-          "?",
-          URI.encode_query(%{
-            "state" => params["state"],
-            "code" => IndieWeb.Test.AuthAdapter.code()
-          })
-        ])
+      obtained_uri = Subject.authenticate(params) |> URI.parse
+      obtained_query_params = URI.decode_query(obtained_uri.query)
 
-      assert signed_url == Subject.authenticate(params)
+      assert %{"state" => "state", "code" => _} = obtained_query_params
     end
 
     test "generate an authorization code when defaulting to edfault 'read' scope" do
@@ -107,17 +87,10 @@ defmodule IndieWeb.AuthTest do
         "state" => "state"
       }
 
-      signed_url =
-        Enum.join([
-          @redirect_uri,
-          "?",
-          URI.encode_query(%{
-            "state" => params["state"],
-            "code" => IndieWeb.Test.AuthAdapter.code()
-          })
-        ])
+      obtained_uri = Subject.authenticate(params) |> URI.parse
+      obtained_query_params = URI.decode_query(obtained_uri.query)
 
-      assert signed_url == Subject.authenticate(params)
+      assert %{"state" => "state", "code" => _} = obtained_query_params
     end
   end
 end

@@ -3,7 +3,6 @@ use Mix.Config
 config :indieweb,
   http_adapter: IndieWeb.Test.HttpAdapter,
   cache_adapter: IndieWeb.Test.CacheAdapter,
-  auth_adapter: IndieWeb.Test.AuthAdapter,
   webmention_url_adapter: IndieWeb.Test.WebmentionUrlAdapter
 
 config :exvcr,
