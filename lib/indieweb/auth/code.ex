@@ -4,7 +4,7 @@ defmodule IndieWeb.Auth.Code do
   """
 
   @spec generate(binary(), binary(), map()) :: binary()
-  def generate(client_id, redirect_uri, data \\ %{}) do
+  def generate(client_id, redirect_uri, data \\ nil) do
     IndieWeb.Auth.adapter().code_generate(client_id, redirect_uri, data)
   end
 
