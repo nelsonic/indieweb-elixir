@@ -63,14 +63,17 @@ defmodule IndieWeb.Auth.Adapters.Default do
     IndieWeb.Cache.delete(do_make_key_for_client(client_id, redirect_uri, args))
   end
 
+  @impl true
   def scope_get(code) do
     IndieWeb.Cache.get(code)
   end
 
+  @impl true
   def scope_persist(code, scope) do
     IndieWeb.Cache.set(code, scope, expire: @code_age)
   end
 
+  @impl true
   def valid_user?(uri) do
     resolve_user_fn =
       Application.get_env(:indieweb, :resolve_user_fn, fn _ -> true end)
@@ -78,6 +81,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
     resolve_user_fn.(uri)
   end
 
+  @impl true
   def token_info(token) do
     case IndieWeb.Cache.get(token) do
       data when is_binary(data) -> URI.decode_query(data)
@@ -85,10 +89,12 @@ defmodule IndieWeb.Auth.Adapters.Default do
     end
   end
 
+  @impl true
   def token_revoke(token) do
     IndieWeb.Cache.delete(token)
   end
 
+  @impl true
   def token_generate(client_id, scope) do
     IndieWeb.Cache.set(
       do_make_token(client_id, scope),
@@ -104,7 +110,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
     ]
     |> Enum.join("_")
     |> URI.encode_query()
-    |> (fn data -> :erlang.phash(:indieweb_auth_code_key, :sha256) end).()
+    |> (fn data -> :crypto.hash(data, :sha256) end).()
   end
 
   defp do_make_token(client_id, scope) do
