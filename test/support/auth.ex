@@ -1,4 +1,5 @@
 defmodule IndieWeb.Test.AuthAdapter do
+  @moduledoc false
   @behaviour IndieWeb.Auth.Adapter
   @code "code"
   @client_id "https://indieauth.client"

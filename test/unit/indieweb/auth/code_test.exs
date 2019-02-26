@@ -28,6 +28,22 @@ defmodule IndieWeb.Auth.CodeTest do
                  "https://indieauth.persists/redirect"
                )
 
+      assert :ok =
+               Subject.persist(
+                 "code",
+                 "https://indieauth.persist",
+                 "https://indieauth.persists/redirect",
+                 %{"scope" => "read update"}
+               )
+
+      assert :ok =
+               Subject.persist(
+                 "code",
+                 "https://indieauth.persist",
+                 "https://indieauth.persists/redirect",
+                 %{"scope" => ~w(read update)}
+               )
+
       assert {:error, :test} =
                Subject.persist("code", "https://indieauth.persist", "fails")
     end
