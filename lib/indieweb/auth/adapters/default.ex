@@ -10,7 +10,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
       :crypto.strong_rand_bytes(8),
       client_id,
       redirect_uri,
-      URI.decode_query(args)
+      URI.encode_query(args)
     ]
     |> Enum.map(&Base.url_encode64/1)
     |> Enum.join(@code_separator)
