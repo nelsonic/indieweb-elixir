@@ -1,12 +1,12 @@
 # [IndieWeb][] Helpers for Elixir
 
-![Maintenance](https://img.shields.io/maintenance/yes/2019.svg?style=plastic)
+![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)
 [![Build Status](https://ci.jacky.wtf/api/badges/indieweb/elixir/status.svg?ref=refs/heads/develop)](https://ci.jacky.wtf/indieweb/elixir)
-![Hex.pm](https://img.shields.io/hexpm/l/indieweb.svg?style=plastic)
-![Liberapay patrons](https://img.shields.io/liberapay/patrons/koype.svg?style=plastic)
-![Liberapay receiving](https://img.shields.io/liberapay/receives/koype.svg?style=plastic)
-[![Hex.pm](https://img.shields.io/hexpm/v/indieweb.svg?style=plastic)](https://hex.pm/packages/indieweb)
-[![Hex.pm](https://img.shields.io/hexpm/dt/indieweb.svg?style=plastic)](https://hex.pm/packages/indieweb)
+![Hex.pm](https://img.shields.io/hexpm/l/indieweb.svg)
+![Liberapay patrons](https://img.shields.io/liberapay/patrons/koype.svg)
+![Liberapay receiving](https://img.shields.io/liberapay/receives/koype.svg)
+[![Hex.pm](https://img.shields.io/hexpm/v/indieweb.svg)](https://hex.pm/packages/indieweb)
+[![Hex.pm](https://img.shields.io/hexpm/dt/indieweb.svg)](https://hex.pm/packages/indieweb)
 
 This library provides common logic for handling [IndieWeb][] [building blocks][] 
 in Elixir applications. This project is more commonly used in [Koype][],
