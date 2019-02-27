@@ -2,9 +2,9 @@
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)
 [![Build Status](https://ci.jacky.wtf/api/badges/indieweb/elixir/status.svg?ref=refs/heads/develop)](https://ci.jacky.wtf/indieweb/elixir)
-![Hex.pm](https://img.shields.io/hexpm/l/indieweb.svg)
-![Liberapay patrons](https://img.shields.io/liberapay/patrons/koype.svg)
-![Liberapay receiving](https://img.shields.io/liberapay/receives/koype.svg)
+[![Hex.pm](https://img.shields.io/hexpm/l/indieweb.svg)](https://hex.pm/packages/indieweb)
+[![Liberapay patrons](https://img.shields.io/liberapay/patrons/koype.svg)](https://liberapay.com/jackyalcine/)
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/koype.svg)](https://liberapay.com/jackyalcine/)
 [![Hex.pm](https://img.shields.io/hexpm/v/indieweb.svg)](https://hex.pm/packages/indieweb)
 [![Hex.pm](https://img.shields.io/hexpm/dt/indieweb.svg)](https://hex.pm/packages/indieweb)
 
