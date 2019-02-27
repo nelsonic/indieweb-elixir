@@ -1,9 +1,12 @@
 # [IndieWeb][] Helpers for Elixir
 
+![Maintenance](https://img.shields.io/maintenance/yes/2019.svg?style=plastic)
 [![Build Status](https://ci.jacky.wtf/api/badges/indieweb/elixir/status.svg?ref=refs/heads/develop)](https://ci.jacky.wtf/indieweb/elixir)
-[![License: AGPLv3](https://badgen.net/badge/license/AGPLv3/blue)](https://choosealicense.com/licenses/agpl-3.0/)
-[![Fund Development](https://badgen.net/badge/fund/on%20patreon/F96854)](http://patreon.com/jackyalcine/)
-[![Fund Development](https://badgen.net/badge/fund/on%20liberapay/FFDC00)](http://liberapay.com/jackyalcine/)
+![Hex.pm](https://img.shields.io/hexpm/l/indieweb.svg?style=plastic)
+![Liberapay patrons](https://img.shields.io/liberapay/patrons/koype.svg?style=plastic)
+![Liberapay receiving](https://img.shields.io/liberapay/receives/koype.svg?style=plastic)
+[![Hex.pm](https://img.shields.io/hexpm/v/indieweb.svg?style=plastic)](https://hex.pm/packages/indieweb)
+[![Hex.pm](https://img.shields.io/hexpm/dt/indieweb.svg?style=plastic)](https://hex.pm/packages/indieweb)
 
 This library provides common logic for handling [IndieWeb][] [building blocks][] 
 in Elixir applications. This project is more commonly used in [Koype][],
