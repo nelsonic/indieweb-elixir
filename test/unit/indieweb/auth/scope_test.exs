@@ -1,21 +1,16 @@
 defmodule IndieWeb.Auth.ScopeTest do
   use IndieWeb.TestCase, async: true
   alias IndieWeb.Auth.Scope, as: Subject
-  @code IndieWeb.Test.AuthAdapter.code()
-
-  setup do
-    Application.put_env(:indieweb, :auth_adapter, IndieWeb.Test.AuthAdapter,
-      persistent: true
-    )
-  end
-
+  @code "a_code"
 
   describe ".get/1" do
     test "finds stored scope info" do
+      IndieWeb.Cache.set(@code, "read")
       assert ~w(read) == Subject.get(@code)
     end
 
     test "returns empty for code with no scope" do
+      IndieWeb.Cache.set(@code <> "_no_scope", "")
       assert ~w() == Subject.get(@code <> "_no_scope")
     end
 
@@ -30,7 +25,7 @@ defmodule IndieWeb.Auth.ScopeTest do
     end
 
     test "saves default code of read" do
-      assert :ok = Subject.persist!(@code, ~w())
+      assert :ok = Subject.persist!(@code, "")
     end
   end
 

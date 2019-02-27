@@ -6,16 +6,19 @@ defmodule IndieWeb.Auth.Scope do
 
   @spec persist!(binary(), binary()) :: :ok
   def persist!(code, scope) do
-    IndieWeb.Auth.adapter().scope_persist(code, scope)
+    :ok = IndieWeb.Auth.adapter().scope_persist(code, scope)
   end
 
   @spec get(binary()) :: binary() | nil
   def get(code) do
-    IndieWeb.Auth.adapter().scope_get(code)
+    case IndieWeb.Auth.adapter().scope_get(code) do
+      {:ok, scope} -> scope |> from_string
+      _ -> []
+    end
   end
 
   def from_string(scope_string) when is_binary(scope_string),
-    do: String.split(scope_string, @separator)
+    do: String.split(scope_string, @separator, trim: true)
 
   def to_string(scopes) when is_list(scopes),
     do: Enum.join(scopes, @separator)
