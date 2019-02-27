@@ -23,8 +23,5 @@ defmodule IndieWeb.Auth.Scope do
   def to_string(scopes) when is_list(scopes),
     do: Enum.join(scopes, @separator)
 
-  def to_string(scopes) when is_list(scopes),
-    do: Enum.join(scopes, " ")
-
   def can_upload?(scope) when is_list(scope), do: Enum.member?(scope, "media")
 end
