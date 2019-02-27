@@ -2,20 +2,17 @@ defmodule IndieWeb.Auth.CodeTest do
   use IndieWeb.TestCase, async: true
   alias IndieWeb.Auth.Code, as: Subject
 
-  setup do
-    Application.put_env(:indieweb, :auth_adapter, IndieWeb.Test.AuthAdapter,
-      persistent: true
-    )
-  end
-
   describe ".generate/2" do
     test "provides a new code" do
-      assert :ok =
-               Subject.persist(
-                 "code",
+      assert Subject.generate(
                  "https://indieauth.code",
                  "https://indieauth.code/redirect"
                )
+
+      assert Subject.generate(
+        "https://indieauth.code",
+        "https://indieauth.code/redirect",
+        %{"magic" => "sauce"})
     end
   end
 
@@ -28,28 +25,27 @@ defmodule IndieWeb.Auth.CodeTest do
                  "https://indieauth.persists/redirect"
                )
 
-      assert {:error, :test} =
-               Subject.persist("code", "https://indieauth.persist", "fails")
+      assert :ok =
+               Subject.persist(
+                 "code",
+                 "https://indieauth.persist",
+                 "https://indieauth.persists/redirect",
+                 %{"scope" => "read update"}
+               )
     end
   end
 
   describe ".verify/3" do
     test "confirms if a code was stored for this value with no data" do
-      assert :ok =
-               Subject.verify(
-                 "code",
-                 "https://indieauth.code",
-                 "https://indieauth.code/foo"
-               )
-    end
+      code = Subject.generate("https://indieauth.code", "https://indieauth.code/foo", %{"grr" => "arg"})
+      :ok = Subject.persist(code, "https://indieauth.code", "https://indieauth.code/foo", %{"grr" => "arg"})
 
-    test "confirms if a code was stored for this value with data" do
       assert :ok =
                Subject.verify(
-                 "code",
+                 code,
                  "https://indieauth.code",
                  "https://indieauth.code/foo",
-                 %{"prop" => "val"}
+                 %{"grr" => "arg"}
                )
     end
   end

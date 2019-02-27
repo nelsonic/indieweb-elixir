@@ -7,7 +7,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
   @impl true
   def code_generate(client_id, redirect_uri, args) do
     [
-      :crypto.strong_rand_bytes(8),
+      :crypto.strong_rand_bytes(16),
       client_id,
       redirect_uri,
       URI.encode_query(args || %{})
@@ -35,9 +35,9 @@ defmodule IndieWeb.Auth.Adapters.Default do
 
       {:ok, fetched_code} when is_binary(fetched_code) ->
         [_token, fetched_client_id, fetched_redirect_uri, fetched_args] =
-          String.split(fetched_code, @code_separator)
-          |> Enum.map(fn value -> Base.url_decode64(value) end)
-          |> Enum.map(fn {:ok, value} -> value end)
+          fetched_code
+          |> String.split(@code_separator)
+          |> Enum.map(&Base.url_decode64!/1)
 
         cond do
           code != fetched_code ->
@@ -65,7 +65,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
 
   @impl true
   def scope_get(code) do
-    IndieWeb.Cache.get(code)
+    IndieWeb.Cache.get(code, [])
   end
 
   @impl true
@@ -84,8 +84,8 @@ defmodule IndieWeb.Auth.Adapters.Default do
   @impl true
   def token_info(token) do
     case IndieWeb.Cache.get(token) do
-      data when is_binary(data) -> URI.decode_query(data)
-      _ -> {:error, :not_found}
+      {:ok, data} when is_binary(data) -> URI.decode_query(data)
+      nil -> {:error, :token_not_found}
     end
   end
 
@@ -96,10 +96,11 @@ defmodule IndieWeb.Auth.Adapters.Default do
 
   @impl true
   def token_generate(client_id, scope) do
-    IndieWeb.Cache.set(
-      do_make_token(client_id, scope),
-      URI.encode_query(%{"scope" => scope, "client_id" => client_id})
-    )
+    token = do_make_token(client_id, scope)
+    case IndieWeb.Cache.set(token, URI.encode_query(%{"scope" => scope, "client_id" => client_id})) do
+      :ok -> {:ok, token}
+      error -> {:error, :failed_to_save_token, reason: error}
+    end
   end
 
   defp do_make_key_for_client(client_id, redirect_uri, args) do
@@ -109,18 +110,18 @@ defmodule IndieWeb.Auth.Adapters.Default do
       args |> URI.encode_query()
     ]
     |> Enum.join("_")
-    |> URI.encode_query()
-    |> (fn data -> :crypto.hash(data, :sha256) end).()
+    |> (fn data -> :crypto.hash(:sha256, data) end).()
   end
 
   defp do_make_token(client_id, scope) do
-    [
+    token_data = [
       :crypto.strong_rand_bytes(32),
       client_id,
       scope
     ]
     |> Enum.map(&Base.url_encode64/1)
     |> Enum.join(@code_separator)
-    |> (fn data -> :crypto.hash(data, :sha256) end).()
+
+    :crypto.hash(:sha256, token_data) |> Base.encode16(case: :lower)
   end
 end

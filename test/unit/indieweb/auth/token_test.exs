@@ -1,75 +1,86 @@
 defmodule IndieWeb.Auth.TokenTest do
   use IndieWeb.TestCase, async: true
   alias IndieWeb.Auth.Token, as: Subject
-  alias IndieWeb.Test.AuthAdapter, as: TestAdapter
 
-  setup do
-    Application.put_env(:indieweb, :auth_adapter, TestAdapter, persistent: true)
+  defp setup_code(_) do
+    client_id = "https://indieauth.token"
+    redirect_url = client_id <> "/redirect"
+    scope = "read update create"
+
+    code =
+      IndieWeb.Auth.Code.generate(client_id, redirect_url, %{"scope" => scope})
+
+    :ok =
+      IndieWeb.Auth.Code.persist(code, client_id, redirect_url, %{
+        "scope" => scope
+      })
+
+    :ok = IndieWeb.Auth.Scope.persist!(code, scope)
+
+    {:ok,
+     code: code, client_id: client_id, redirect_url: redirect_url, scope: scope}
+  end
+
+  defp setup_token(%{
+         code: code,
+         client_id: client_id,
+         redirect_url: redirect_url
+       }) do
+    case Subject.generate(code, client_id, redirect_url) do
+      {:ok, token} ->
+        {:ok, token: token, me: "https://indieauth.me"}
+
+      error ->
+        error
+    end
   end
 
   describe ".generate/3" do
-    test "generates token for code" do
-      assert TestAdapter.token() ==
-               Subject.generate(
-                 TestAdapter.code(),
-                 TestAdapter.client_id(),
-                 TestAdapter.redirect_uri()
-               )
+    setup [:setup_code]
+
+    test "generates token for code",
+         %{code: code, client_id: client_id, redirect_url: redirect_url} do
+      assert Subject.generate(
+               code,
+               client_id,
+               redirect_url
+             )
     end
 
-    test "fails if the URIs don't match the code" do
-      assert {:error, :token_generation_failure, reason: :code_mismatch} =
-               Subject.generate(
-                 TestAdapter.code(),
-                 TestAdapter.client_id() <> "_wrong",
-                 TestAdapter.redirect_uri()
-               )
-
-      assert {:error, :token_generation_failure, reason: :code_mismatch} =
-               Subject.generate(
-                 TestAdapter.code(),
-                 TestAdapter.client_id(),
-                 TestAdapter.redirect_uri() <> "_wrong"
-               )
-    end
-
-    test "fails if code has no scope" do
+    test "fails if code has no scope",
+         %{code: code, client_id: client_id, redirect_url: redirect_url} do
       assert {:error, :token_generation_failure, reason: :missing_scope} =
                Subject.generate(
-                 TestAdapter.code() <> "_no_scope",
-                 TestAdapter.client_id(),
-                 TestAdapter.redirect_uri()
+                 code <> "_no_scope",
+                 client_id,
+                 redirect_url
                )
     end
   end
 
   describe ".info_for/1" do
-    test "successfully fetches info about token" do
-      assert %{
-               "me" => TestAdapter.me(),
-               "client_id" => TestAdapter.client_id(),
-               "scope" => ~w(read),
-             } == Subject.info_for(TestAdapter.token())
+    setup [:setup_code, :setup_token]
+
+    test "successfully fetches info about token", %{
+      token: token
+    } do
+      assert %{"scope" => scope} = Subject.info_for(token)
     end
 
-    test "fails if token does not point to user" do
-      assert {:error, :incorrect_me_for_token} ==
-               Subject.info_for(TestAdapter.token() <> "_wrong_user")
-    end
-
-    test "fails if token is deemed invalid" do
-      assert {:error, :invalid_token} ==
-               Subject.info_for(TestAdapter.token() <> "_invalid")
+    test "fails if token not found", %{token: token} do
+      assert {:error, :token_not_found} == Subject.info_for(token <> "_invalid")
     end
   end
 
   describe ".revoke/1" do
-    test "successfully destroys provided token" do
-      assert :ok = Subject.revoke(TestAdapter.token())
+    setup [:setup_code, :setup_token]
+
+    test "successfully destroys provided token", %{token: token} do
+      assert :ok = Subject.revoke(token)
     end
 
-    test "passes through for deemed invalid token" do
-      assert :ok = Subject.revoke(TestAdapter.token() <> "_invalid")
+    test "passes through for deemed invalid token", %{token: token} do
+      assert :ok = Subject.revoke(token <> "_invalid")
     end
   end
 end

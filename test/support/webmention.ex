@@ -9,10 +9,3 @@ defmodule IndieWeb.Test.WebmentionUrlAdapter do
   def to_source_url(:fake_source), do: URI.parse("https://source.indieweb/fake")
   def to_source_url(_), do: nil
 end
-
-Application.put_env(
-  :indieweb,
-  :webmention_url_adapter,
-  IndieWeb.Test.WebmentionUrlAdapter,
-  persistent: true
-)
