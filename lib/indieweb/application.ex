@@ -9,7 +9,7 @@ defmodule IndieWeb.Application do
       worker(Cachex, [:indieweb, []])
     ]
 
-    opts = [strategy: :one_for_one, name: Koype.Supervisor]
+    opts = [strategy: :one_for_one, name: IndieWeb.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
