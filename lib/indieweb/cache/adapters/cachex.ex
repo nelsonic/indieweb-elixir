@@ -18,7 +18,7 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
   def delete(key) do
     case Cachex.del(:indieweb, key) do
       {:ok, _} -> :ok
-      _ -> :error
+      err -> {:error, err}
     end
   end
 
@@ -32,8 +32,7 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
 
         :ok
 
-      _ ->
-        :error
+      err -> {:error, err}
     end
   end
 end
