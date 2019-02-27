@@ -25,7 +25,8 @@ defmodule IndieWeb.MixProject do
 
   def application do
     [
-      applications: [:logger]
+      mod: {IndieWeb.Application, []},
+      extra_applications: [:logger, :cachex]
     ]
   end
 
