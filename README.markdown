@@ -26,7 +26,7 @@ so you can bring what you prefer to work with.
 
 ## Contributing
 
-Koype is a free and open source software project. For guidelines on contributing to the project
+`elixir` is a free and open source software project. For guidelines on contributing to the project
 as a developer, artist, translator, or however you wish to offer your time and skills, please
 read the [`CONTRIBUTING`][contrib] document (_TODO_).
 
@@ -38,10 +38,8 @@ Participation in this project means adhering to our [Code of Conduct][coc].
 
 ## Financial Support
 
-This project is used in publicly open projects by [black.af](https://black.af).
-However, at the time of writing, not enough funds are being raised in order to
-support this development. Become a backer on [Patreon][patreon] or [Liberapay][liberapay]
-to support this project financially. _Anything_ helps!
+This project is used in publicly open projects by [black.af](https://black.af). Become a backer 
+on [Patreon][patreon] or [Liberapay][liberapay] to support this project financially. _Anything_ helps!
 
 [indieweb]: https://indieweb.org
 [koype]: https://koype.net
