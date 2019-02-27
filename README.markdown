@@ -1,9 +1,12 @@
 # [IndieWeb][] Helpers for Elixir
 
+![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)
 [![Build Status](https://ci.jacky.wtf/api/badges/indieweb/elixir/status.svg?ref=refs/heads/develop)](https://ci.jacky.wtf/indieweb/elixir)
-[![License: AGPLv3](https://badgen.net/badge/license/AGPLv3/blue)](https://choosealicense.com/licenses/agpl-3.0/)
-[![Fund Development](https://badgen.net/badge/fund/on%20patreon/F96854)](http://patreon.com/jackyalcine/)
-[![Fund Development](https://badgen.net/badge/fund/on%20liberapay/FFDC00)](http://liberapay.com/jackyalcine/)
+[![Hex.pm](https://img.shields.io/hexpm/l/indieweb.svg)](https://hex.pm/packages/indieweb)
+[![Liberapay patrons](https://img.shields.io/liberapay/patrons/koype.svg)](https://liberapay.com/jackyalcine/)
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/koype.svg)](https://liberapay.com/jackyalcine/)
+[![Hex.pm](https://img.shields.io/hexpm/v/indieweb.svg)](https://hex.pm/packages/indieweb)
+[![Hex.pm](https://img.shields.io/hexpm/dt/indieweb.svg)](https://hex.pm/packages/indieweb)
 
 This library provides common logic for handling [IndieWeb][] [building blocks][] 
 in Elixir applications. This project is more commonly used in [Koype][],
@@ -26,7 +29,7 @@ so you can bring what you prefer to work with.
 
 ## Contributing
 
-Koype is a free and open source software project. For guidelines on contributing to the project
+`elixir` is a free and open source software project. For guidelines on contributing to the project
 as a developer, artist, translator, or however you wish to offer your time and skills, please
 read the [`CONTRIBUTING`][contrib] document (_TODO_).
 
@@ -38,10 +41,8 @@ Participation in this project means adhering to our [Code of Conduct][coc].
 
 ## Financial Support
 
-This project is used in publicly open projects by [black.af](https://black.af).
-However, at the time of writing, not enough funds are being raised in order to
-support this development. Become a backer on [Patreon][patreon] or [Liberapay][liberapay]
-to support this project financially. _Anything_ helps!
+This project is used in publicly open projects by [black.af](https://black.af). Become a backer 
+on [Patreon][patreon] or [Liberapay][liberapay] to support this project financially. _Anything_ helps!
 
 [indieweb]: https://indieweb.org
 [koype]: https://koype.net

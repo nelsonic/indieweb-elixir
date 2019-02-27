@@ -30,7 +30,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
     case IndieWeb.Cache.get(
            do_make_key_for_client(client_id, redirect_uri, args)
          ) do
-      {:ok, nil} ->
+      nil ->
         {:error, :code_not_found}
 
       {:ok, fetched_code} when is_binary(fetched_code) ->
