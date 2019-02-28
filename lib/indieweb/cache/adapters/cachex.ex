@@ -9,7 +9,7 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
   @impl true
   def get(key) do
     case Cachex.get(:indieweb, key) do
-      {:ok, value} = resp when not is_nil(value) -> resp
+      {:ok, value} when not is_nil(value) -> value
       _ -> nil
     end
   end

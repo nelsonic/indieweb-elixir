@@ -29,16 +29,16 @@ defmodule IndieWeb.CacheTest do
   describe ".get/2" do
     @describetag skip: true
     test "defaults to provided value" do
-      assert IndieWeb.Cache.get("foo", "default_value") == "default_value"
+      assert "default_value" = IndieWeb.Cache.get("foo_not_found", "default_value")
     end
 
     test "finds value in cache" do
-      IndieWeb.Test.CacheAdapter.set("foo", "in_cache")
-      assert IndieWeb.Cache.get("foo") == "in_cache"
+      IndieWeb.Test.CacheAdapter.set("foo", "in_cache", [])
+      assert "in_cache" = IndieWeb.Cache.get("foo")
     end
 
     test "nils out if value not found" do
-      assert is_nil(IndieWeb.Cache.get("foo"))
+      refute IndieWeb.Cache.get("foo_not_found")
     end
   end
 
@@ -46,14 +46,14 @@ defmodule IndieWeb.CacheTest do
     @describetag skip: true
     test "adds value to cache" do
       assert IndieWeb.Cache.set("foo", "bar")
-      assert IndieWeb.Test.CacheAdapter.get("foo") == "bar"
+      assert "bar" = IndieWeb.Test.CacheAdapter.get("foo")
     end
   end
 
   describe ".delete/1" do
     @describetag skip: true
     test "removes value from cache" do
-      IndieWeb.Test.CacheAdapter.set("foo", "in_cache")
+      IndieWeb.Test.CacheAdapter.set("foo", "in_cache", [])
       assert IndieWeb.Cache.delete("foo")
       assert is_nil(IndieWeb.Test.CacheAdapter.get("foo"))
     end

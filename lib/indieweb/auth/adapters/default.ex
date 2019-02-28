@@ -33,27 +33,28 @@ defmodule IndieWeb.Auth.Adapters.Default do
       nil ->
         {:error, :code_not_found}
 
-      {:ok, fetched_code} when is_binary(fetched_code) ->
-        [_token, fetched_client_id, fetched_redirect_uri, fetched_args] =
-          fetched_code
-          |> String.split(@code_separator)
-          |> Enum.map(&Base.url_decode64!/1)
+      fetched_code when is_binary(fetched_code) ->
+        if code != fetched_code do
+          {:error, :invalid_code}
+        else
+          [_token, fetched_client_id, fetched_redirect_uri, fetched_args] =
+            fetched_code
+            |> String.split(@code_separator)
+            |> Enum.map(&Base.url_decode64!/1)
 
-        cond do
-          code != fetched_code ->
-            {:error, :invalid_code}
+          cond do
+            fetched_client_id != client_id ->
+              {:error, :mismatched_client_id_for_code}
 
-          fetched_client_id != client_id ->
-            {:error, :mismatched_client_id_for_code}
+            fetched_redirect_uri != redirect_uri ->
+              {:error, :mismatched_redirect_uri_for_code}
 
-          fetched_redirect_uri != redirect_uri ->
-            {:error, :mismatched_redirect_uri_for_code}
+            URI.decode_query(fetched_args) != args ->
+              {:error, :mismatched_extra_data}
 
-          URI.decode_query(fetched_args) != args ->
-            {:error, :mismatched_extra_data}
-
-          true ->
-            :ok
+            true ->
+              :ok
+          end
         end
     end
   end
@@ -97,7 +98,11 @@ defmodule IndieWeb.Auth.Adapters.Default do
   @impl true
   def token_generate(client_id, scope) do
     token = do_make_token(client_id, scope)
-    case IndieWeb.Cache.set(token, URI.encode_query(%{"scope" => scope, "client_id" => client_id})) do
+
+    case IndieWeb.Cache.set(
+           token,
+           URI.encode_query(%{"scope" => scope, "client_id" => client_id})
+         ) do
       :ok -> {:ok, token}
       error -> {:error, :failed_to_save_token, reason: error}
     end
@@ -114,13 +119,14 @@ defmodule IndieWeb.Auth.Adapters.Default do
   end
 
   defp do_make_token(client_id, scope) do
-    token_data = [
-      :crypto.strong_rand_bytes(32),
-      client_id,
-      scope
-    ]
-    |> Enum.map(&Base.url_encode64/1)
-    |> Enum.join(@code_separator)
+    token_data =
+      [
+        :crypto.strong_rand_bytes(32),
+        client_id,
+        scope
+      ]
+      |> Enum.map(&Base.url_encode64/1)
+      |> Enum.join(@code_separator)
 
     :crypto.hash(:sha256, token_data) |> Base.encode16(case: :lower)
   end
