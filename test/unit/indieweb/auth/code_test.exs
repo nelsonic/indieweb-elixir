@@ -42,7 +42,7 @@ defmodule IndieWeb.Auth.CodeTest do
         Subject.generate(
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       :ok =
@@ -50,7 +50,7 @@ defmodule IndieWeb.Auth.CodeTest do
           code,
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       assert :ok =
@@ -58,7 +58,7 @@ defmodule IndieWeb.Auth.CodeTest do
                  code,
                  "https://indieauth.code",
                  "https://indieauth.code/foo",
-                 %{"grr" => "arg"}
+                 %{"version" => "1.0.0-pre.3"}
                )
     end
 
@@ -67,7 +67,7 @@ defmodule IndieWeb.Auth.CodeTest do
         Subject.generate(
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       :ok =
@@ -75,7 +75,7 @@ defmodule IndieWeb.Auth.CodeTest do
           code,
           "https://indieauth.codezzz",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       assert {:error, :mismatched_client_id_for_code} =
@@ -83,7 +83,7 @@ defmodule IndieWeb.Auth.CodeTest do
                  code,
                  "https://indieauth.codezzz",
                  "https://indieauth.code/foo",
-                 %{"grr" => "arg"}
+                 %{"version" => "1.0.0-pre.3"}
                )
     end
 
@@ -92,7 +92,7 @@ defmodule IndieWeb.Auth.CodeTest do
         Subject.generate(
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       :ok =
@@ -100,7 +100,7 @@ defmodule IndieWeb.Auth.CodeTest do
           code,
           "https://indieauth.code",
           "https://indieauth.codezzz/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       assert {:error, :mismatched_redirect_uri_for_code} =
@@ -108,16 +108,16 @@ defmodule IndieWeb.Auth.CodeTest do
                  code,
                  "https://indieauth.code",
                  "https://indieauth.codezzz/foo",
-                 %{"grr" => "arg"}
+                 %{"version" => "1.0.0-pre.3"}
                )
     end
 
-    test "fails if the extra args does not match" do
+    test "fails if the extra 1.0.0-pre.3s does not match" do
       code =
         Subject.generate(
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       :ok =
@@ -125,7 +125,7 @@ defmodule IndieWeb.Auth.CodeTest do
           code,
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg", "god" => "bondye"}
+          %{"version" => "1.0.0-pre.3", "god" => "bondye"}
         )
 
       assert {:error, :mismatched_extra_data} =
@@ -133,7 +133,7 @@ defmodule IndieWeb.Auth.CodeTest do
                  code,
                  "https://indieauth.code",
                  "https://indieauth.code/foo",
-                 %{"grr" => "arg", "god" => "bondye"}
+                 %{"version" => "1.0.0-pre.3", "god" => "bondye"}
                )
     end
 
@@ -142,7 +142,7 @@ defmodule IndieWeb.Auth.CodeTest do
         Subject.generate(
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       :ok =
@@ -150,7 +150,7 @@ defmodule IndieWeb.Auth.CodeTest do
           code,
           "https://indieauth.code",
           "https://indieauth.code/foo",
-          %{"grr" => "arg"}
+          %{"version" => "1.0.0-pre.3"}
         )
 
       assert {:error, :invalid_code} =
@@ -158,7 +158,7 @@ defmodule IndieWeb.Auth.CodeTest do
                  code <> "invalid",
                  "https://indieauth.code",
                  "https://indieauth.code/foo",
-                 %{"grr" => "arg"}
+                 %{"version" => "1.0.0-pre.3"}
                )
     end
   end
