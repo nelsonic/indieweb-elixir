@@ -8,7 +8,9 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
 
   @impl true
   def get(key) do
-    case Cachex.get(:indieweb, key) do
+    result = Cachex.get(:indieweb, key)
+
+    case result do
       {:ok, value} when not is_nil(value) -> value
       _ -> nil
     end
@@ -27,12 +29,14 @@ defmodule IndieWeb.Cache.Adapters.Cachex do
     case Cachex.put(:indieweb, key, value) do
       {:ok, _} ->
         if Keyword.has_key?(options, :expire) do
-          {:ok, _} = Cachex.expire(:indieweb, key, options[:expire])
+          {:ok, true} =
+            Cachex.expire(:indieweb, key, :timer.seconds(options[:expire]))
         end
 
         :ok
 
-      err -> {:error, err}
+      err ->
+        {:error, err}
     end
   end
 end

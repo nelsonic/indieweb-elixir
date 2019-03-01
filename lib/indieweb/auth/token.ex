@@ -12,7 +12,7 @@ defmodule IndieWeb.Auth.Token do
       IndieWeb.Auth.Code.destroy(client_id, redirect_uri, args)
       IndieWeb.Auth.adapter().token_generate(client_id, scope_str)
     else
-      [] -> {:error, :token_generation_failure, reason: :missing_scope}
+      nil -> {:error, :token_generation_failure, reason: :missing_scope}
       {:error, reason} -> {:error, :token_generation_failure, reason: reason}
     end
   end

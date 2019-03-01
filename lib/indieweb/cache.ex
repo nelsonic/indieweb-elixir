@@ -19,7 +19,7 @@ defmodule IndieWeb.Cache do
       )
 
   @doc "Fetches the value defined by `key` from the adapter; returning `value` if it doesn't exist."
-  @spec get(binary(), any()) :: any() | nil
+  @spec get(binary(), any()) :: any()
   def get(key, value \\ nil), do: adapter().get(key) || value
 
   @doc "Removes the value of key `key` from the adapter."

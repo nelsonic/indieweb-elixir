@@ -89,17 +89,22 @@ defmodule IndieWeb.HCardTest do
   describe ".resolve/1" do
     test "successfully resolves a h-card from the provided URI" do
       use_cassette "hcard_finds_from_homepage" do
-        assert {:ok, %{"photo" => "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"}} =
-                 Subject.resolve("https://jacky.wtf")
+        assert {:ok,
+                %{
+                  "photo" =>
+                    "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"
+                }} = Subject.resolve("https://jacky.wtf")
       end
     end
 
     test "successfully resolves a h-card from authorship" do
       use_cassette "hcard_finds_from_authorship" do
-        assert {:ok, %{"photo" => "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"}} =
-                 Subject.resolve(
-                   "https://jacky.wtf/weblog/wafflejs-jan-2019/"
-                 )
+        assert {:ok,
+                %{
+                  "photo" =>
+                    "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"
+                }} =
+                 Subject.resolve("https://jacky.wtf/weblog/wafflejs-jan-2019/")
       end
     end
 

@@ -5,6 +5,9 @@ defmodule IndieWeb.Auth.Scope do
   @separator " "
 
   @spec persist!(binary(), binary()) :: :ok
+  def persist!(code, scope)
+  def persist!(code, ""), do: persist!(code, "read")
+
   def persist!(code, scope) do
     :ok = IndieWeb.Auth.adapter().scope_persist(code, scope)
   end
@@ -12,8 +15,8 @@ defmodule IndieWeb.Auth.Scope do
   @spec get(binary()) :: binary() | nil
   def get(code) do
     case IndieWeb.Auth.adapter().scope_get(code) do
-      {:ok, scope} -> scope |> from_string
-      _ -> []
+      scope when not is_nil(scope) -> scope |> from_string
+      _ -> nil
     end
   end
 

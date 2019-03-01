@@ -2,7 +2,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
   @moduledoc "Provides a default implementation of IndieAuth stateful activity."
   @behaviour IndieWeb.Auth.Adapter
   @code_separator "/"
-  @code_age 60_000
+  @code_age 60
 
   @impl true
   def code_generate(client_id, redirect_uri, args) do
@@ -64,14 +64,18 @@ defmodule IndieWeb.Auth.Adapters.Default do
     IndieWeb.Cache.delete(do_make_key_for_client(client_id, redirect_uri, args))
   end
 
+  defp do_make_scope_key(code) do
+    "scope_to_code:#{code}"
+  end
+
   @impl true
   def scope_get(code) do
-    IndieWeb.Cache.get(code, [])
+    IndieWeb.Cache.get(do_make_scope_key(code))
   end
 
   @impl true
   def scope_persist(code, scope) do
-    IndieWeb.Cache.set(code, scope, expire: @code_age)
+    :ok = IndieWeb.Cache.set(do_make_scope_key(code), scope, expire: @code_age)
   end
 
   @impl true
@@ -82,17 +86,22 @@ defmodule IndieWeb.Auth.Adapters.Default do
     resolve_user_fn.(uri)
   end
 
+  defp do_make_token_key(code) do
+    :crypto.hash(:sha256, ["token", code])
+    |> Base.encode64(padding: false)
+  end
+
   @impl true
   def token_info(token) do
-    case IndieWeb.Cache.get(token) do
-      {:ok, data} when is_binary(data) -> URI.decode_query(data)
+    case IndieWeb.Cache.get(do_make_token_key(token)) do
+      data when not is_nil(data) -> URI.decode_query(data)
       nil -> {:error, :token_not_found}
     end
   end
 
   @impl true
   def token_revoke(token) do
-    IndieWeb.Cache.delete(token)
+    IndieWeb.Cache.delete(do_make_token_key(token))
   end
 
   @impl true
@@ -100,7 +109,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
     token = do_make_token(client_id, scope)
 
     case IndieWeb.Cache.set(
-           token,
+           do_make_token_key(token),
            URI.encode_query(%{"scope" => scope, "client_id" => client_id})
          ) do
       :ok -> {:ok, token}
@@ -121,13 +130,13 @@ defmodule IndieWeb.Auth.Adapters.Default do
   defp do_make_token(client_id, scope) do
     token_data =
       [
-        :crypto.strong_rand_bytes(32),
+        :crypto.strong_rand_bytes(8),
         client_id,
         scope
       ]
-      |> Enum.map(&Base.url_encode64/1)
+      |> Enum.map(&Base.encode32(&1, padding: false))
       |> Enum.join(@code_separator)
 
-    :crypto.hash(:sha256, token_data) |> Base.encode16(case: :lower)
+    :crypto.hash(:sha256, token_data) |> Base.encode64(padding: false)
   end
 end

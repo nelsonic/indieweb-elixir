@@ -56,7 +56,7 @@ defmodule IndieWeb.AuthTest do
         "state" => "state"
       }
 
-      obtained_uri = Subject.authenticate(params) |> URI.parse
+      obtained_uri = Subject.authenticate(params) |> URI.parse()
       obtained_query_params = URI.decode_query(obtained_uri.query)
 
       assert %{"state" => "state", "code" => _} = obtained_query_params
@@ -72,7 +72,7 @@ defmodule IndieWeb.AuthTest do
         "state" => "state"
       }
 
-      obtained_uri = Subject.authenticate(params) |> URI.parse
+      obtained_uri = Subject.authenticate(params) |> URI.parse()
       obtained_query_params = URI.decode_query(obtained_uri.query)
 
       assert %{"state" => "state", "code" => _} = obtained_query_params
@@ -87,7 +87,7 @@ defmodule IndieWeb.AuthTest do
         "state" => "state"
       }
 
-      obtained_uri = Subject.authenticate(params) |> URI.parse
+      obtained_uri = Subject.authenticate(params) |> URI.parse()
       obtained_query_params = URI.decode_query(obtained_uri.query)
 
       assert %{"state" => "state", "code" => _} = obtained_query_params

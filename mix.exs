@@ -7,7 +7,7 @@ defmodule IndieWeb.MixProject do
       aliases: aliases(),
       app: :indieweb,
       name: "IndieWeb",
-      version: "0.0.30",
+      version: "0.0.31",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -19,14 +19,24 @@ defmodule IndieWeb.MixProject do
         ci: :test,
         "coveralls.detail": :test
       ],
-      deps: deps()
+      deps: deps(),
+      source_url: "https://git.jacky.wtf/indieweb/elixir",
+      source_url_pattern:
+        "https://git.jacky.wtf/indieweb/elixir/blob/develop/%{path}#L%{line}",
+      homepage_url: "https://indieweb.org/",
+      docs: [
+        logo: "priv/static/logo.png",
+        extras: Path.wildcard("docs/*.markdown"),
+        main: "indieweb",
+        output: "priv/dist/doc"
+      ]
     ]
   end
 
   def application do
     [
       mod: {IndieWeb.Application, []},
-      extra_applications: [:logger, :cachex]
+      extra_applications: [:logger, :cachex, :runtime_tools]
     ]
   end
 
@@ -46,8 +56,14 @@ defmodule IndieWeb.MixProject do
   defp package() do
     [
       name: "indieweb",
+      description:
+        "Collection of common IndieWeb utilites like Webmention, post type discovery and IndieAuth.",
       licenses: ["APGL v3.0"],
-      links: %{"Source Code" => "https://git.jacky.wtf/indieweb/elixir"}
+      links: %{
+        "Source Code" => "https://git.jacky.wtf/indieweb/elixir",
+        "IndieWeb" => "https://indieweb.org",
+        "IndieAuth spec" => "https://indieauth.spec.indieweb.org"
+      }
     ]
   end
 
