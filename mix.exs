@@ -70,7 +70,7 @@ defmodule IndieWeb.MixProject do
 
   defp aliases do
     [
-      ci: ["inch", "test --cover"]
+      ci: ["test --include slow:true --cover", "coveralls.detail", "inch"]
     ]
   end
 end
