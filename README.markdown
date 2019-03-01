@@ -22,7 +22,7 @@ so you can bring what you prefer to work with.
 * [ ] Meta data for common scopes used in the IndieWeb
 * [ ] Extraction of
  * [ ] [App information][h-x-app]
- * [ ] [Post Type Discovery][ptd]
+ * [x] [Post Type Discovery][ptd]
 * [x] [Webmentions][wm]
  * [x] [Sending][wm-send]
  * [x] [Receiving][wm-rec]
