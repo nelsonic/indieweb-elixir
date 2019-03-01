@@ -5,7 +5,7 @@ defmodule IndieWeb.Auth.ScopeTest do
 
   describe ".get/1" do
     test "finds stored scope info" do
-      IndieWeb.Cache.set(@code, "read")
+      assert :ok = Subject.persist!(@code, "read")
       assert ~w(read) == Subject.get(@code)
     end
 
