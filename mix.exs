@@ -55,7 +55,7 @@ defmodule IndieWeb.MixProject do
     [
       name: "indieweb",
       description:
-        "Collection of common IndieWeb utilites like Webmention, post type discovery and IndieAuth.",
+        "Collection of common IndieWeb utilites like authorship resolution, Webmention, post type discovery and IndieAuth.",
       licenses: ["APGL v3.0"],
       links: %{
         "Source Code" => "https://git.jacky.wtf/indieweb/elixir",
