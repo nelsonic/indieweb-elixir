@@ -28,6 +28,10 @@ defmodule IndieWeb.AppTest do
       use_cassette "app_fetch_from_quill" do
         assert {:ok, _} = Subject.retrieve("https://quill.p3k.io")
       end
+
+      use_cassette "app_fetch_from_jackys_site" do
+        assert {:ok, %{"name" => "jacky.wtf"}} = Subject.retrieve("https://jacky.wtf")
+      end
     end
   end
 end
