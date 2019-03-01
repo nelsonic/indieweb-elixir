@@ -21,7 +21,7 @@ so you can bring what you prefer to work with.
 * [x] Management for [IndieAuth tokens][1]
 * [ ] Meta data for common scopes used in the IndieWeb
 * [ ] Extraction of
- * [ ] [App information][h-x-app]
+ * [x] [App information][h-x-app]
  * [x] [Post Type Discovery][ptd]
 * [x] [Webmentions][wm]
  * [x] [Sending][wm-send]
