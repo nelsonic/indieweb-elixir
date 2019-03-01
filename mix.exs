@@ -25,7 +25,7 @@ defmodule IndieWeb.MixProject do
         "https://git.jacky.wtf/indieweb/elixir/blob/develop/%{path}#L%{line}",
       homepage_url: "https://indieweb.org/",
       docs: [
-        logo: "priv/static/logo.png",
+        logo: "priv/static/images/logo.png",
         extras: Path.wildcard("docs/*.markdown"),
         main: "indieweb",
         output: "priv/dist/doc"
@@ -76,3 +76,5 @@ defmodule IndieWeb.MixProject do
     ]
   end
 end
+
+
