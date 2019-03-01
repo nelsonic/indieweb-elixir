@@ -9,23 +9,20 @@ defmodule IndieWeb.Auth.ScopeTest do
       assert ~w(read) == Subject.get(@code)
     end
 
-    test "returns empty for code with no scope" do
-      IndieWeb.Cache.set(@code <> "_no_scope", "")
-      assert ~w() == Subject.get(@code <> "_no_scope")
-    end
-
-    test "returns empty for non-existent code-to-scope" do
-      assert ~w() == Subject.get(@code <> "_not_real")
+    test "returns nil for non-existent code-to-scope" do
+      assert nil == Subject.get(@code <> "_not_real")
     end
   end
 
   describe ".persist!/2" do
-    test "saves provided scope when it's a string" do
+    test "saves provided scope" do
       assert :ok = Subject.persist!(@code, "read")
+      assert ~w(read) = Subject.get(@code)
     end
 
     test "saves default code of read" do
       assert :ok = Subject.persist!(@code, "")
+      assert ~w(read) = Subject.get(@code)
     end
   end
 

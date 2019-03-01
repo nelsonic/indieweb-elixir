@@ -144,7 +144,6 @@ defmodule IndieWeb.PostTest do
                  },
                  [:note, :article]
                )
-
     end
 
     test "determines a note" do
@@ -155,6 +154,7 @@ defmodule IndieWeb.PostTest do
                  },
                  [:note, :article]
                )
+
       assert :note =
                Subject.determine_type(
                  %{

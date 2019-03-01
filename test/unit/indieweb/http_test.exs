@@ -4,21 +4,8 @@ defmodule IndieWeb.HttpTest do
   alias IndieWeb.Http, as: Subject
   doctest Subject
 
-  setup do
-    Application.put_env(:indieweb, :http_adapter, IndieWeb.Test.HttpAdapter,
-      persistent: true
-    )
-
-    :ok
-  end
-
   describe ".adapter/0" do
-    test "pulls the one defined in configuration" do
-      assert Subject.adapter() == IndieWeb.Test.HttpAdapter
-    end
-
     test "defaults to using HTTPotion" do
-      Application.delete_env(:indieweb, :http_adapter)
       assert Subject.adapter() == IndieWeb.Http.Adapters.HTTPotion
     end
   end
@@ -57,7 +44,6 @@ defmodule IndieWeb.HttpTest do
               "<https://www.instagram.com/jackyalcine/>; rel=\"me\", " <>
               "<https://v2.jacky.wtf/api/indie/micropub/media>; rel=\"media_endpoint\", " <>
               "<https://v2.jacky.wtf/api/indie/micropub>; rel=\"micropub\", " <>
-              "<https://aperture.p3k.io/microsub/175>; rel=\"microsub\", " <>
               "<https://v2.jacky.wtf>; rel=\"self\", " <>
               "<https://v2.jacky.wtf/api/indie/token>; rel=\"token_endpoint\""
         } do

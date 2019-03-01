@@ -25,7 +25,7 @@ defmodule IndieWeb do
   `IndieWeb.Http.Adapters.HTTPotion` and `Cachex` via
   `IndieWeb.Cache.Adapters.Cachex`. There's a default implementatiion for
   handling authentication that allows any `me` value to be valid.
-  
+
   There's no default adapter for resolving  URIs for Webmentions.
   """
 end

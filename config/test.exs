@@ -1,9 +1,6 @@
 use Mix.Config
 
 config :indieweb,
-  http_adapter: IndieWeb.Test.HttpAdapter,
-  cache_adapter: IndieWeb.Test.CacheAdapter,
-  auth_adapter: IndieWeb.Auth.Adapters.Default,
   webmention_url_adapter: IndieWeb.Test.WebmentionUrlAdapter
 
 config :logger, level: :debug
