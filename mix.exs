@@ -46,8 +46,9 @@ defmodule IndieWeb.MixProject do
   defp package() do
     [
       name: "indieweb",
+      description: "Collection of common IndieWeb utilites like Webmention, post type discovery and IndieAuth.",
       licenses: ["APGL v3.0"],
-      links: %{"Source Code" => "https://git.jacky.wtf/indieweb/elixir"}
+      links: %{"Source Code" => "https://git.jacky.wtf/indieweb/elixir", "IndieWeb" => "https://indieweb.org", "IndieAuth spec" => "https://indieauth.spec.indieweb.org"},
     ]
   end
 
