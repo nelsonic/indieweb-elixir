@@ -7,7 +7,7 @@ defmodule IndieWeb.MixProject do
       aliases: aliases(),
       app: :indieweb,
       name: "IndieWeb",
-      version: "0.0.30",
+      version: "0.0.31",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -25,10 +25,10 @@ defmodule IndieWeb.MixProject do
         "https://git.jacky.wtf/indieweb/elixir/blob/develop/%{path}#L%{line}",
       homepage_url: "https://indieweb.org/",
       docs: [
-        logo: "priv/static/images/logo.png",
+        logo: "priv/static/logo.png",
         extras: Path.wildcard("docs/*.markdown"),
         main: "indieweb",
-        output: "priv/static/doc"
+        output: "priv/dist/doc"
       ]
     ]
   end
