@@ -22,9 +22,7 @@ defmodule Microformats2.Utility do
   end
 
   defp do_parse_item(item, format) do
-    types = Map.get(item, :type, [])
-
-    if Enum.member?(types, "h-#{format}") do
+    if Enum.member?(Map.get(item, :type, []), "h-#{format}") do
       [item]
     else
       Stream.concat(

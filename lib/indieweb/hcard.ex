@@ -17,26 +17,20 @@ defmodule IndieWeb.HCard do
     host = "#{scheme}://#{authority}"
 
     approaches = [
-      fn ->
-        case fetch_representative(uri) do
-          {:ok, hcard} -> hcard
-          _ -> nil
-        end
-      end,
+      fn -> fetch_representative(uri) end,
       fn ->
         with(
           {:ok, %IndieWeb.Http.Response{body: body}} <- IndieWeb.Http.get(uri),
-          mf2 when is_map(mf2) <- Microformats2.parse(body, uri),
-          {:ok, hcard} <- do_check_author_of_first_entry(mf2, {host, uri})
+          mf2 when is_map(mf2) <- Microformats2.parse(body, uri)
         ) do
-          hcard
+          do_check_author_of_first_entry(mf2, {host, uri})
         else
           _ ->
             nil
         end
       end,
       fn ->
-        do_format_hcard(do_stub_out_hcard(uri), host)
+        {:ok, do_format_hcard(do_stub_out_hcard(uri), host)}
       end
     ]
 
@@ -44,17 +38,12 @@ defmodule IndieWeb.HCard do
 
     case result do
       nil -> {:error, :no_hcard_found}
-      formatted_hcard -> {:ok, formatted_hcard}
+      {:ok, _} = resp -> resp
     end
   end
 
   def resolve(mf2, uri) when is_map(mf2) do
-    %{scheme: scheme, authority: authority} =
-      URI.parse(uri |> String.trim_trailing("/"))
-
-    host = "#{scheme}://#{authority}"
-
-    case fetch_representative(mf2, {host, uri}) do
+    case fetch_representative(mf2, uri) do
       {:ok, hcard} -> hcard
       _ -> nil
     end
@@ -175,8 +164,10 @@ defmodule IndieWeb.HCard do
 
   defp do_check_author_of_first_entry(mf2, {host, _}) do
     top_items =
-      mf2[:items]
-      |> Enum.reject(fn item -> Enum.member?(item["type"], "h-card") end)
+      Map.get(mf2, :items, [])
+      |> Enum.reject(fn item ->
+        Enum.member?(Map.get(item, "type", []), "h-card")
+      end)
 
     Enum.find_value(top_items, fn item ->
       authors = Microformats2.Utility.get_value(item, "author")
