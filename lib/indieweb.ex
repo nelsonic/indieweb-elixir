@@ -18,9 +18,14 @@ defmodule IndieWeb do
   * `IndieWeb.Http.Adapter`
   * `IndieWeb.Cache.Adapter`
   * `IndieWeb.Webmention.URIAdapter`
+  * `IndieWeb.Auth.Adapter`
 
   ### Default Adapters
-  This library ships with support for `HTTPotion` via `IndieWeb.Http.Adapters.HTTPotion` and
-  `Cachex` via `IndieWeb.Cache.Adapters.Cachex`. There's no default adapter for resolving URIs for Webmentions.
+  This library ships with support for `HTTPotion` via
+  `IndieWeb.Http.Adapters.HTTPotion` and `Cachex` via
+  `IndieWeb.Cache.Adapters.Cachex`. There's a default implementatiion for
+  handling authentication that allows any `me` value to be valid.
+  
+  There's no default adapter for resolving  URIs for Webmentions.
   """
 end
