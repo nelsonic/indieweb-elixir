@@ -7,6 +7,7 @@ defmodule IndieWeb.Auth.Scope do
   @spec persist!(binary(), binary()) :: :ok
   def persist!(code, scope)
   def persist!(code, ""), do: persist!(code, "read")
+  def persist!(code, scope) when is_list(scope), do: persist!(code, __MODULE__.to_string(scope))
 
   def persist!(code, scope) do
     :ok = IndieWeb.Auth.adapter().scope_persist(code, scope)
