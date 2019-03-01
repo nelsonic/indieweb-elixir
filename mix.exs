@@ -26,9 +26,7 @@ defmodule IndieWeb.MixProject do
       homepage_url: "https://indieweb.org/",
       docs: [
         logo: "priv/static/images/logo.png",
-        extras: Path.wildcard("docs/*.markdown"),
-        main: "indieweb",
-        output: "priv/dist/doc"
+        extras: Path.wildcard("docs/*.markdown")
       ]
     ]
   end
