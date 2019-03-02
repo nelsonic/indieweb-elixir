@@ -2,7 +2,7 @@ defmodule Microformats2.Utility do
   @moduledoc false
 
   def get_format(mf2, format) do
-    case Enum.fetch(extract_all(mf2, format), 0) do
+    case Enum.fetch(extract(mf2, format), 0) do
       {:ok, mf2} -> mf2
       _ -> nil
     end
@@ -16,34 +16,26 @@ defmodule Microformats2.Utility do
 
   def get_value(_, _, _), do: {:error, :no_properties}
 
-  def extract_all(mf2, format) do
-    items = Map.take(mf2, ~w(items children)a) |> Map.values() |> List.flatten()
-    Stream.flat_map(items, fn item -> do_parse_item(item, format) end)
+  def extract(mf2, format) do
+    items =
+      mf2
+      |> Map.take(~w(items children)a)
+      |> Map.values()
+      |> List.flatten()
+      |> Enum.filter(&Enum.member?(Map.get(&1, :type, []), "h-#{format}"))
+
+    items
   end
 
-  defp do_parse_item(item, format) do
-    if Enum.member?(Map.get(item, :type, []), "h-#{format}") do
-      [item]
+  def fetch(uri) do
+    with(
+      {:ok, %IndieWeb.Http.Response{body: body, code: code}}
+      when code >= 200 and code < 300 <- IndieWeb.Http.get(uri),
+      mf2 when is_map(mf2) <- Microformats2.parse(body, uri)
+    ) do
+      {:ok, mf2}
     else
-      Stream.concat(
-        do_extract_from_properties(item, format),
-        extract_all(item, format)
-      )
+      _ -> {:error, :remote_mf2_fetch_failed}
     end
   end
-
-  defp do_extract_from_properties(%{properties: properties}, format) do
-    Stream.flat_map(properties, fn
-      {_, items} ->
-        Stream.flat_map(items, fn
-          item when is_map(item) ->
-            do_parse_item(item, format)
-
-          _ ->
-            []
-        end)
-    end)
-  end
-
-  defp do_extract_from_properties(_, _), do: []
 end

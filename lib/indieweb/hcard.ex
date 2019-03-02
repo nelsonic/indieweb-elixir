@@ -19,14 +19,9 @@ defmodule IndieWeb.HCard do
     approaches = [
       fn -> fetch_representative(uri) end,
       fn ->
-        with(
-          {:ok, %IndieWeb.Http.Response{body: body}} <- IndieWeb.Http.get(uri),
-          mf2 when is_map(mf2) <- Microformats2.parse(body, uri)
-        ) do
-          do_check_author_of_first_entry(mf2, {host, uri})
-        else
-          _ ->
-            nil
+        case Microformats2.Utility.fetch(uri) do
+          {:ok, mf2} -> do_check_author_of_first_entry(mf2, {host, uri})
+          _ -> nil
         end
       end,
       fn ->
@@ -37,15 +32,8 @@ defmodule IndieWeb.HCard do
     result = Enum.find_value(approaches, & &1.())
 
     case result do
-      nil -> {:error, :no_hcard_found}
       {:ok, _} = resp -> resp
-    end
-  end
-
-  def resolve(mf2, uri) when is_map(mf2) do
-    case fetch_representative(mf2, uri) do
-      {:ok, hcard} -> hcard
-      _ -> nil
+      _ -> {:error, :no_hcard_found}
     end
   end
 
@@ -68,13 +56,8 @@ defmodule IndieWeb.HCard do
   [1]: http://microformats.org/wiki/representative-h-card-parsing
   """
   def fetch_representative(uri) when is_binary(uri) do
-    with(
-      {:ok, %IndieWeb.Http.Response{body: body}} <- IndieWeb.Http.get(uri),
-      mf2 when is_map(mf2) <- Microformats2.parse(body, uri),
-      {:ok, hcard} <- fetch_representative(mf2, uri)
-    ) do
-      {:ok, hcard}
-    else
+    case Microformats2.Utility.fetch(uri) do
+      {:ok, mf2} -> fetch_representative(mf2, uri)
       _ -> nil
     end
   end
@@ -91,7 +74,7 @@ defmodule IndieWeb.HCard do
       &do_find_solo/2
     ]
 
-    Enum.reduce_while(approaches, {:error, :no_hcard_found}, fn approach, acc ->
+    Enum.reduce_while(approaches, nil, fn approach, acc ->
       case approach.(mf2, {root_uri, uri}) do
         nil ->
           {:cont, acc}
@@ -113,7 +96,7 @@ defmodule IndieWeb.HCard do
       |> Enum.map(&URI.parse/1)
       |> Enum.map(&URI.to_string/1)
 
-    cards = Microformats2.Utility.extract_all(mf2, "card")
+    cards = Microformats2.Utility.extract(mf2, "card")
 
     Enum.find_value(cards, fn hcard ->
       urls = Microformats2.Utility.get_value(hcard, :url, [])
@@ -136,7 +119,7 @@ defmodule IndieWeb.HCard do
 
   # TODO: We can have multiple UIDs as well - maybe tuple setup.
   defp do_find_uid_url(mf2, {_, uri}) do
-    cards = Microformats2.Utility.extract_all(mf2, "card")
+    cards = Microformats2.Utility.extract(mf2, "card")
 
     Enum.find_value(cards, fn hcard ->
       hcard_uri =
@@ -170,12 +153,9 @@ defmodule IndieWeb.HCard do
       end)
 
     Enum.find_value(top_items, fn item ->
-      authors = Microformats2.Utility.get_value(item, "author")
+      authors = Microformats2.Utility.get_value(item, :author)
 
       Enum.find_value(authors, fn
-        author_map when is_map(author_map) ->
-          {:ok, do_format_hcard(author_map, host)}
-
         author_uri when is_binary(author_uri) ->
           resolved_author_uri =
             IndieWeb.Http.make_absolute_uri(author_uri, host)
@@ -183,6 +163,9 @@ defmodule IndieWeb.HCard do
           case IndieWeb.HCard.resolve(resolved_author_uri) do
             {:ok, _} = result -> result
           end
+
+        author_map when is_map(author_map) ->
+          {:ok, do_format_hcard(author_map, host)}
       end)
     end)
   end
@@ -235,6 +218,8 @@ defmodule IndieWeb.HCard do
         nil
       end
     end)
+    |> Enum.reject(fn {_, value} -> is_nil(value) end)
+    |> Map.new
   end
 
   defp do_stub_out_hcard(uri) do

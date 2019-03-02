@@ -40,6 +40,7 @@ defmodule IndieWeb.MixProject do
 
   defp deps do
     [
+      {:apex, "~> 1.2.1", only: [:dev, :test]},
       {:cachex, "~> 3.1"},
       {:credo, "~> 1.0.0", only: [:dev, :test]},
       {:excoveralls, "~> 0.10.0", only: [:test]},

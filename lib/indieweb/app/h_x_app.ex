@@ -21,7 +21,7 @@ defmodule IndieWeb.App.HxApp do
             nil ->
               {:cont, acc}
 
-            h_app_data when is_map(h_app_data) ->
+            h_app_data ->
               {:halt, {:ok, h_app_data}}
           end
         end
@@ -30,10 +30,10 @@ defmodule IndieWeb.App.HxApp do
     case result do
       {:ok, h_app_data} ->
         app_data =
-          ~w(name logo url)
+          ~w(name logo url)a
           |> Enum.map(fn key ->
             value = h_app_data |> MF2.get_value(key) |> List.first()
-            {key, value}
+            {Atom.to_string(key), value}
           end)
           |> Map.new()
 
@@ -44,20 +44,9 @@ defmodule IndieWeb.App.HxApp do
     end
   end
 
-  defp do_fetch(uri) do
-    with(
-      {:ok, %IndieWeb.Http.Response{body: body}} <- IndieWeb.Http.get(uri),
-      mf2 when is_map(mf2) <- Microformats2.parse(body, uri)
-    ) do
-      {:ok, mf2}
-    else
-      _ -> false
-    end
-  end
-
   @impl true
   def resolve(uri) do
-    case do_fetch(uri) do
+    case MF2.fetch(uri) do
       {:ok, mf2_data} -> do_format(mf2_data)
       false -> {:error, :failed_to_fetch_h_x_app_data}
     end

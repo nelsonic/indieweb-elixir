@@ -128,7 +128,7 @@ defmodule IndieWeb.HCardTest do
       end
     end
 
-    test "resolves from author of first entry" do
+    test "resolves from author of first entry - embedded" do
       html = """
       <html>
       <body>
@@ -150,11 +150,24 @@ defmodule IndieWeb.HCardTest do
       end
     end
 
+    test "resolves from author of first entry - URI" do
+      use_cassette "hcard_resolve_from_first" do
+        assert {:ok, %{"uid" => @url <> "/", "url" => @url <> "/", "name" => @hcard["name"]}} ==
+          Subject.resolve(@url <> "/post/one")
+      end
+    end
+
     test "resolves generic h-card from non-MF2 site" do
       use_cassette "hcard_generate_from_uri" do
         assert {:ok, %{"name" => "firefox.com"}} =
           Subject.resolve("http://firefox.com")
       end
+    end
+  end
+
+  describe ".resolve/2" do
+    test "resolves successfully with MF2 + URI" do
+
     end
   end
 end
