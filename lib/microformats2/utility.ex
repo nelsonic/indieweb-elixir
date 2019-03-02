@@ -18,8 +18,8 @@ defmodule Microformats2.Utility do
 
   def fetch(uri) do
     with(
-      {:ok, %IndieWeb.Http.Response{body: body, code: code}} when code >= 200 and code < 300 <- IndieWeb.Http.get(uri),
-      mf2 when is_map(mf2) <- Microformats2.parse(body, uri)
+      {:ok, resp} <- IndieWeb.Http.get(uri),
+      mf2 when is_map(mf2) <- Microformats2.parse(resp.body, uri)
     ) do
       {:ok, mf2}
     else
