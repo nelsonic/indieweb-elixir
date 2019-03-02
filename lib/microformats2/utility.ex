@@ -16,17 +16,6 @@ defmodule Microformats2.Utility do
 
   def get_value(_, _, _), do: {:error, :no_properties}
 
-  def extract(mf2, format) do
-    items =
-      mf2
-      |> Map.take(~w(items children)a)
-      |> Map.values()
-      |> List.flatten()
-      |> Enum.filter(&Enum.member?(Map.get(&1, :type, []), "h-#{format}"))
-
-    items
-  end
-
   def fetch(uri) do
     with(
       {:ok, %IndieWeb.Http.Response{body: body, code: code}}
@@ -38,4 +27,44 @@ defmodule Microformats2.Utility do
       _ -> {:error, :remote_mf2_fetch_failed}
     end
   end
+
+  def extract(mf2) when is_map(mf2) do
+    mf2 |> Map.take(~w(items children)a) |> Map.values() |> List.flatten()
+  end
+  def extract(_), do: []
+
+  def extract_deep(mf2) when is_map(mf2) do
+    items = extract(mf2) ++ do_extract_from_properties(mf2)
+    children = items |> Enum.map(&extract_deep/1) |> List.flatten()
+
+    items ++ children
+  end
+  def extract_deep(_), do: []
+
+  def extract_deep(mf2, type) do
+    mf2 |> extract_deep |> Enum.filter(&matches_type?(&1, type))
+  end
+
+  def extract(mf2, type) do
+    mf2 |> extract |> Enum.filter(&matches_type?(&1, type))
+  end
+
+  def matches_type?(mf2, type) when is_map(mf2) do
+    Enum.member?(Map.get(mf2, :type, []), "h-#{type}")
+  end
+  def matches_type?(_, _), do: false
+
+  defp do_extract_from_properties(%{properties: properties}) do
+    Enum.map(properties, fn {_, items} ->
+      Enum.map(items, fn
+        item when is_map(item) ->
+          item
+        _ ->
+          nil
+      end)
+    end)
+    |> List.flatten()
+  end
+
+  defp do_extract_from_properties(_), do: []
 end

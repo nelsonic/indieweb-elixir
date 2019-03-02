@@ -92,7 +92,7 @@ defmodule IndieWeb.HCard do
       ~w(home me author)
       |> Enum.map(fn key -> Map.get(mf2, :rels, %{}) |> Map.get(key, []) end)
       |> List.flatten()
-      |> Enum.map(&String.trim_trailing(&1, "/"))
+      |> Enum.map(&IndieWeb.Http.make_absolute_uri(&1, host))
       |> Enum.map(&URI.parse/1)
       |> Enum.map(&URI.to_string/1)
 
@@ -102,11 +102,7 @@ defmodule IndieWeb.HCard do
       urls = Microformats2.Utility.get_value(hcard, :url, [])
 
       Enum.find_value(urls, fn current_url ->
-        hcard_uri =
-          IndieWeb.Http.make_absolute_uri(current_url, host)
-          |> String.trim_trailing("/")
-          |> URI.parse()
-          |> URI.to_string()
+        hcard_uri = IndieWeb.Http.make_absolute_uri(current_url, host)
 
         if Enum.member?(rel_mes, hcard_uri) do
           hcard
@@ -118,26 +114,25 @@ defmodule IndieWeb.HCard do
   end
 
   # TODO: We can have multiple UIDs as well - maybe tuple setup.
-  defp do_find_uid_url(mf2, {_, uri}) do
-    cards = Microformats2.Utility.extract(mf2, "card")
+  defp do_find_uid_url(mf2, {host, uri}) do
+    cards = mf2 |> Microformats2.Utility.extract_deep("card")
 
     Enum.find_value(cards, fn hcard ->
-      hcard_uri =
+      hcard_uris =
         Microformats2.Utility.get_value(hcard, :url, ["/"])
-        |> List.first()
-        |> String.trim_trailing("/")
+        |> Enum.map(&IndieWeb.Http.make_absolute_uri(&1, host))
 
-      hcard_uid =
-        Microformats2.Utility.get_value(hcard, :uid, []) |> List.first()
+      hcard_uids =
+        Microformats2.Utility.get_value(hcard, :uid, [uri])
 
       valid_uid =
-        if is_nil(hcard_uid) do
+        if is_nil(hcard_uids) do
           true
         else
-          String.trim_trailing(hcard_uid, "/") == uri
+          Enum.member?(hcard_uids, uri)
         end
 
-      if hcard_uri == uri && valid_uid do
+      if Enum.member?(hcard_uris, uri) && valid_uid do
         hcard
       else
         nil
@@ -147,10 +142,10 @@ defmodule IndieWeb.HCard do
 
   defp do_check_author_of_first_entry(mf2, {host, _}) do
     top_items =
-      Map.get(mf2, :items, [])
-      |> Enum.reject(fn item ->
-        Enum.member?(Map.get(item, "type", []), "h-card")
-      end)
+      mf2
+      |> Microformats2.Utility.extract_deep
+      |> Enum.reject(&Microformats2.Utility.matches_type?(&1, "card"))
+      |> Enum.to_list
 
     Enum.find_value(top_items, fn item ->
       authors = Microformats2.Utility.get_value(item, :author)
