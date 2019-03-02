@@ -1,0 +1,50 @@
+[
+  {
+    "request": {
+      "headers": [],
+      "body": "",
+      "method": "get",
+      "request_body": "",
+      "url": "https://indieweb.card/post/one"
+    },
+    "response": {
+      "binary": false,
+      "body": "<html><body><div class=\"h-entry\"><a class=\"u-author\" href=\"/\">Fake Name</a></div></body></html>",
+      "headers": {
+        "Date": "Sat, 23 Feb 2019 23:55:14 GMT",
+        "Content-Type": "text/html; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000",
+        "X-Robots-Tag": "noodp"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "headers": [],
+      "body": "",
+      "method": "get",
+      "request_body": "",
+      "url": "https://indieweb.card/"
+    },
+    "response": {
+      "binary": false,
+      "body": "<html><body><div class=\"h-card\"><a class=\"u-url u-uid\" href=\"/\"><span class=\"p-name\">Fake name</span></a></div></body></html>",
+      "headers": {
+        "Date": "Sat, 23 Feb 2019 23:55:14 GMT",
+        "Content-Type": "text/html; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000",
+        "X-Robots-Tag": "noodp"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

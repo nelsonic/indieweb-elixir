@@ -60,18 +60,11 @@ defmodule IndieWeb.App do
   """
   @spec retrieve(uri :: String.t()) :: {:ok, any()} | {:error, any()}
   def retrieve(url) do
-    case Enum.reduce_while(
-           IndieWeb.App.Parser.known(),
-           {:error, :no_compatible_parsers},
-           fn parser, acc ->
-             do_handle_parser(url, parser, acc)
-           end
-         ) do
-      {:error, _} = error -> error
-
-      {:ok, data} ->
-        {:ok, data}
-    end
+    Enum.reduce_while(
+      IndieWeb.App.Parser.known(),
+      {:error, :no_compatible_parsers},
+      &do_handle_parser(url, &1, &2)
+    )
   end
 
   defp do_handle_parser(url, parser, acc) do

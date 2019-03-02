@@ -7,7 +7,7 @@ defmodule IndieWeb.MixProject do
       aliases: aliases(),
       app: :indieweb,
       name: "IndieWeb",
-      version: "0.0.33",
+      version: "0.0.34",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -34,12 +34,13 @@ defmodule IndieWeb.MixProject do
   def application do
     [
       mod: {IndieWeb.Application, []},
-      extra_applications: [:logger, :cachex, :runtime_tools]
+      extra_applications: [:logger, :cachex, :runtime_tools, :httpotion]
     ]
   end
 
   defp deps do
     [
+      {:apex, "~> 1.2.1", only: [:dev, :test]},
       {:cachex, "~> 3.1"},
       {:credo, "~> 1.0.0", only: [:dev, :test]},
       {:excoveralls, "~> 0.10.0", only: [:test]},
@@ -55,7 +56,7 @@ defmodule IndieWeb.MixProject do
     [
       name: "indieweb",
       description:
-        "Collection of common IndieWeb utilites like Webmention, post type discovery and IndieAuth.",
+        "Collection of common IndieWeb utilites like authorship resolution, Webmention, post type discovery and IndieAuth.",
       licenses: ["APGL v3.0"],
       links: %{
         "Source Code" => "https://git.jacky.wtf/indieweb/elixir",
@@ -70,7 +71,7 @@ defmodule IndieWeb.MixProject do
 
   defp aliases do
     [
-      ci: ["inch", "test --cover"]
+      ci: ["test --include slow:true --cover", "coveralls.detail", "inch"]
     ]
   end
 end
