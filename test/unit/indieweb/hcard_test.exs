@@ -90,21 +90,21 @@ defmodule IndieWeb.HCardTest do
     test "successfully resolves a h-card from the provided URI" do
       use_cassette "hcard_finds_from_homepage" do
         assert {:ok,
-          %{
-            "photo" =>
-            "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"
-          }} = Subject.resolve("https://jacky.wtf")
+                %{
+                  "photo" =>
+                    "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"
+                }} = Subject.resolve("https://jacky.wtf")
       end
     end
 
     test "successfully resolves a h-card from authorship" do
       use_cassette "hcard_finds_from_authorship" do
         assert {:ok,
-          %{
-            "photo" =>
-            "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"
-          }} =
-            Subject.resolve("https://jacky.wtf/weblog/wafflejs-jan-2019/")
+                %{
+                  "photo" =>
+                    "https://jacky.wtf/assets/brand/self-2018-5037f4d6316311e2c53cb78919e29d9a980d032a4a1082686b9b9db3f5fd8621.jpg"
+                }} =
+                 Subject.resolve("https://jacky.wtf/weblog/wafflejs-jan-2019/")
       end
     end
 
@@ -122,9 +122,9 @@ defmodule IndieWeb.HCardTest do
       </body>
       </html>
       """
+
       use_cassette :stub, url: @url, body: html do
-        assert {:ok, @hcard} ==
-          Subject.resolve(@url)
+        assert {:ok, @hcard} == Subject.resolve(@url)
       end
     end
 
@@ -144,30 +144,33 @@ defmodule IndieWeb.HCardTest do
       </body>
       </html>
       """
+
       use_cassette :stub, url: @url, body: html do
-        assert {:ok, @hcard} ==
-          Subject.resolve(@url)
+        assert {:ok, @hcard} == Subject.resolve(@url)
       end
     end
 
     test "resolves from author of first entry - URI" do
       use_cassette "hcard_resolve_from_first" do
-        assert {:ok, %{"uid" => @url <> "/", "url" => @url <> "/", "name" => @hcard["name"]}} ==
-          Subject.resolve(@url <> "/post/one")
+        assert {:ok,
+                %{
+                  "uid" => @url <> "/",
+                  "url" => @url <> "/",
+                  "name" => @hcard["name"]
+                }} == Subject.resolve(@url <> "/post/one")
       end
     end
 
     test "resolves generic h-card from non-MF2 site" do
       use_cassette "hcard_generate_from_uri" do
         assert {:ok, %{"name" => "firefox.com"}} =
-          Subject.resolve("http://firefox.com")
+                 Subject.resolve("http://firefox.com")
       end
     end
   end
 
   describe ".resolve/2" do
     test "resolves successfully with MF2 + URI" do
-
     end
   end
 end

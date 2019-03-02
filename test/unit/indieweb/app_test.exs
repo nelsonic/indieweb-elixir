@@ -26,11 +26,17 @@ defmodule IndieWeb.AppTest do
 
     test "fetches info from a parser" do
       use_cassette "app_fetch_from_quill" do
-        assert {:ok, %{"name" => "Quill", "url" => "https://quill.p3k.io/", "logo" => "https://quill.p3k.io/images/quill-logo-144.png"}} = Subject.retrieve("https://quill.p3k.io")
+        assert {:ok,
+                %{
+                  "name" => "Quill",
+                  "url" => "https://quill.p3k.io/",
+                  "logo" => "https://quill.p3k.io/images/quill-logo-144.png"
+                }} = Subject.retrieve("https://quill.p3k.io")
       end
 
       use_cassette "app_fetch_from_jackys_site" do
-        assert {:ok, %{"name" => "jacky.wtf"}} = Subject.retrieve("https://jacky.wtf")
+        assert {:ok, %{"name" => "jacky.wtf"}} =
+                 Subject.retrieve("https://jacky.wtf")
       end
     end
   end

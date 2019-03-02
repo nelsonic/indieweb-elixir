@@ -122,8 +122,7 @@ defmodule IndieWeb.HCard do
         Microformats2.Utility.get_value(hcard, :url, ["/"])
         |> Enum.map(&IndieWeb.Http.make_absolute_uri(&1, host))
 
-      hcard_uids =
-        Microformats2.Utility.get_value(hcard, :uid, [uri])
+      hcard_uids = Microformats2.Utility.get_value(hcard, :uid, [uri])
 
       valid_uid =
         if is_nil(hcard_uids) do
@@ -143,9 +142,9 @@ defmodule IndieWeb.HCard do
   defp do_check_author_of_first_entry(mf2, {host, _}) do
     top_items =
       mf2
-      |> Microformats2.Utility.extract_deep
+      |> Microformats2.Utility.extract_deep()
       |> Enum.reject(&Microformats2.Utility.matches_type?(&1, "card"))
-      |> Enum.to_list
+      |> Enum.to_list()
 
     Enum.find_value(top_items, fn item ->
       authors = Microformats2.Utility.get_value(item, :author)
@@ -214,7 +213,7 @@ defmodule IndieWeb.HCard do
       end
     end)
     |> Enum.reject(fn {_, value} -> is_nil(value) end)
-    |> Map.new
+    |> Map.new()
   end
 
   defp do_stub_out_hcard(uri) do

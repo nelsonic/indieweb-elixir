@@ -30,6 +30,7 @@ defmodule Microformats2.Utility do
   def extract(mf2) when is_map(mf2) do
     mf2 |> Map.take(~w(items children)a) |> Map.values() |> List.flatten()
   end
+
   def extract(_), do: []
 
   def extract_deep(mf2) when is_map(mf2) do
@@ -38,6 +39,7 @@ defmodule Microformats2.Utility do
 
     items ++ children
   end
+
   def extract_deep(_), do: []
 
   def extract_deep(mf2, type) do
@@ -51,6 +53,7 @@ defmodule Microformats2.Utility do
   def matches_type?(mf2, type) when is_map(mf2) do
     Enum.member?(Map.get(mf2, :type, []), "h-#{type}")
   end
+
   def matches_type?(_, _), do: false
 
   defp do_extract_from_properties(%{properties: properties}) do
@@ -58,6 +61,7 @@ defmodule Microformats2.Utility do
       Enum.map(items, fn
         item when is_map(item) ->
           item
+
         _ ->
           nil
       end)
