@@ -7,7 +7,7 @@ defmodule IndieWeb.MixProject do
       aliases: aliases(),
       app: :indieweb,
       name: "IndieWeb",
-      version: "0.0.36",
+      version: "0.0.37",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -17,6 +17,7 @@ defmodule IndieWeb.MixProject do
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         ci: :test,
+        test: :test,
         "coveralls.detail": :test
       ],
       deps: deps(),
@@ -75,5 +76,3 @@ defmodule IndieWeb.MixProject do
     ]
   end
 end
-
-
