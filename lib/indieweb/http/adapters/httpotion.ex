@@ -8,8 +8,8 @@ defmodule IndieWeb.Http.Adapters.HTTPotion do
         timeout: Keyword.get(opts, :timeout, IndieWeb.Http.timeout()),
         follow_redirects: true,
         auto_sni: true,
-        headers: Keyword.get(opts, :headers, %{}) |> Map.to_list(),
-        body: Keyword.get(opts, :body, %{}) |> URI.encode_query(),
+        headers: Keyword.get(opts, :headers, %{}) |> Map.to_list() || nil,
+        body: Keyword.get(opts, :body, %{}) |> URI.encode_query() || nil,
         query: Keyword.get(opts, :query, nil)
       ]
       |> Enum.reject(fn {_, v} -> is_nil(v) end)

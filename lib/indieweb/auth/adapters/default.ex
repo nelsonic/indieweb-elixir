@@ -2,7 +2,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
   @moduledoc "Provides a default implementation of IndieAuth stateful activity."
   @behaviour IndieWeb.Auth.Adapter
   @code_separator "/"
-  @code_age 60
+  @code_age 60 * 10
 
   @impl true
   def code_generate(client_id, redirect_uri, args) do
@@ -87,8 +87,8 @@ defmodule IndieWeb.Auth.Adapters.Default do
   end
 
   defp do_make_token_key(code) do
-    :crypto.hash(:sha256, ["token", code])
-    |> Base.encode64(padding: false)
+    :crypto.hash(:sha256, "token:#{code}")
+    |> Base.encode16(padding: false, case: :lower)
   end
 
   @impl true
@@ -123,8 +123,9 @@ defmodule IndieWeb.Auth.Adapters.Default do
       redirect_uri,
       args |> URI.encode_query()
     ]
-    |> Enum.join("_")
+    |> Enum.join(":")
     |> (fn data -> :crypto.hash(:sha256, data) end).()
+    |> Base.encode16(case: :lower, padding: false)
   end
 
   defp do_make_token(client_id, scope) do
@@ -134,7 +135,7 @@ defmodule IndieWeb.Auth.Adapters.Default do
         client_id,
         scope
       ]
-      |> Enum.map(&Base.encode32(&1, padding: false))
+      |> Enum.map(&Base.encode16(&1, padding: false, case: :lower))
       |> Enum.join(@code_separator)
 
     :crypto.hash(:sha256, token_data) |> Base.encode64(padding: false)
