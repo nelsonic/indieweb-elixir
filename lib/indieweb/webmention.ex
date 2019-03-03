@@ -15,8 +15,9 @@ defmodule IndieWeb.Webmention do
   end
 
   defmodule SendResponse do
+    @moduledoc false
     @enforce_keys ~w(target source code)a
-    defstruct ~w(target source code status)a
+    defstruct ~w(target source code status body headers)a
   end
 
   @doc "Defines the adpater to use to resolve URI and source content."
@@ -96,8 +97,7 @@ defmodule IndieWeb.Webmention do
   def direct_send!(endpoint, target_url, source) do
     with(
       {:ok, source_url} <- resolve_source_url(source),
-      {:ok, resp} <-
-        IndieWeb.Http.post(endpoint,
+      {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}} when code >= 200 and code < 400 <- IndieWeb.Http.post(endpoint,
           body: %{"source" => source_url, "target" => target_url},
           headers: %{"Content-Type" => "application/x-www-form-urlencoded"}
         )
@@ -105,13 +105,16 @@ defmodule IndieWeb.Webmention do
       send_resp = %SendResponse{
         target: target_url,
         source: source_url,
-        code: resp.code,
-        status: :accepted
+        code: code,
+        body: body,
+        headers: headers,
+        status: :accepted,
       }
 
       {:ok, send_resp}
     else
-      {:error, error} -> {:error, :webmention_send_failure, reason: error}
+      {:error, error} -> {:error, reason: error}
+      {:ok, result} -> {:error, reason: result}
     end
   end
 

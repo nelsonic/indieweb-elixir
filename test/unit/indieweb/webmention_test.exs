@@ -204,6 +204,14 @@ defmodule IndieWeb.WebmentionTest do
       end
     end
 
+    test "fails if server reports error" do
+      use_cassette "webmention_send_failure" do
+        assert {:error, :webmention_send_failure, _} =
+                 Subject.send("https://webmention.target/page", :fake_source)
+      end
+    end
+
+
     test "fails if source URI could be obtained" do
       assert {:error, :webmention_send_failure, reason: :no_endpoint_found} =
                Subject.send("https://webmention.target/page", :bad_test_source)
@@ -240,12 +248,6 @@ defmodule IndieWeb.WebmentionTest do
                  target: "https://target.indieweb/goes/nowhere"
                )
     end
-
-    @tag skip: true
-    test "marks incoming Webmention as vouch-able"
-
-    @tag skip: true
-    test "marks incoming Webmention as requiring authenticaton (private)"
   end
 
   describe ".resolve_target_from_url/1" do
