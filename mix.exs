@@ -21,11 +21,10 @@ defmodule IndieWeb.MixProject do
         "coveralls.detail": :test
       ],
       deps: deps(),
-      source_url: "https://git.jacky.wtf/indieweb/elixir",
-      source_url_pattern:
-        "https://git.jacky.wtf/indieweb/elixir/blob/develop/%{path}#L%{line}",
       homepage_url: "https://indieweb.org/",
       docs: [
+        source_url: "https://git.jacky.wtf/indieweb/elixir",
+        source_url_pattern: "https://git.jacky.wtf/indieweb/elixir/src/branch/master/%{path}#L%{line}",
         logo: "priv/static/images/logo.png",
         extras: Path.wildcard("docs/*.markdown")
       ]
