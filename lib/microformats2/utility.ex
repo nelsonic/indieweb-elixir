@@ -14,7 +14,7 @@ defmodule Microformats2.Utility do
     Map.get(properties, property, default_value)
   end
 
-  def get_value(_, _, _), do: {:error, :no_properties}
+  def get_value(_, _, default_value), do: default_value
 
   def fetch(uri) do
     with(
