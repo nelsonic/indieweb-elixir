@@ -32,6 +32,25 @@ defmodule IndieWeb.HCardTest do
       assert {:ok, @hcard} = Subject.fetch_representative(mf2, @url)
     end
 
+    test "finds top-level h-card contains a u-uid and u-url with relative photo" do
+      html = """
+      <html>
+      <body>
+      <div class="h-card">
+      <img class="u-photo" src="/photo" alt="#{Faker.Lorem.sentence()}" />
+      <a href="#{@url}" class="u-url u-uid">
+      <span class="p-name">#{@hcard["name"]}</span>
+      </a>
+      <p class="p-note">#{@hcard["note"]}</p>
+      </div>
+      </body>
+      </html>
+      """
+
+      mf2 = Microformats2.parse(html, @url)
+      assert {:ok, @hcard} = Subject.fetch_representative(mf2, @url)
+    end
+
     test "finds top-level h-card contains a u-uid and u-url with photo" do
       html = """
       <html>
@@ -50,7 +69,6 @@ defmodule IndieWeb.HCardTest do
       mf2 = Microformats2.parse(html, @url)
       assert {:ok, @hcard} = Subject.fetch_representative(mf2, @url)
     end
-
 
     test "finds h-card where url matches a rel=me path" do
       html = """
