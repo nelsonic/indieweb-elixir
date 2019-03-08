@@ -203,15 +203,18 @@ defmodule IndieWeb.HCard do
       end
     end)
     |> Map.put_new_lazy("photo", fn ->
-      photo =
-        Microformats2.Utility.get_value(hcard, :photo, []) |> List.first()
+      photo = Microformats2.Utility.get_value(hcard, :photo, []) |> List.first()
 
-      photo_uri = cond do
-        is_map(photo) == true -> Microformats2.Utility.get_value(photo, :url, []) |> List.first
-        true -> photo
-      end
+      photo_uri =
+        cond do
+          is_map(photo) == true ->
+            Microformats2.Utility.get_value(photo, :url, []) |> List.first()
 
-      if !is_nil(photo_uri) do
+          true ->
+            photo
+        end
+
+      if !is_nil(photo_uri) and is_binary(photo_uri) do
         IndieWeb.Http.make_absolute_uri(photo_uri, host)
       else
         nil

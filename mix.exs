@@ -7,7 +7,7 @@ defmodule IndieWeb.MixProject do
       aliases: aliases(),
       app: :indieweb,
       name: "IndieWeb",
-      version: "0.0.41",
+      version: "0.0.42",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -41,11 +41,11 @@ defmodule IndieWeb.MixProject do
   defp deps do
     [
       {:apex, "~> 1.2.1", only: [:dev, :test]},
-      {:cachex, "~> 3.1"},
+      {:cachex, "~> 3.1.0"},
       {:credo, "~> 1.0.0", only: [:dev, :test]},
       {:excoveralls, "~> 0.10.0", only: [:test]},
-      {:ex_doc, "~> 0.14", only: :dev},
-      {:exvcr, "~> 0.10", only: :test},
+      {:ex_doc, "~> 0.14.0", only: :dev},
+      {:exvcr, "~> 0.10.0", only: :test},
       {:faker, "~> 0.12.0", only: :test},
       {:inch_ex, github: "rrrene/inch_ex", only: [:dev, :test]},
       {:microformats2, "~> 0.2.0"}
