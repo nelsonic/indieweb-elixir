@@ -8,7 +8,7 @@ defmodule IndieWeb.MixProject do
       app: :indieweb,
       name: "IndieWeb",
       version: "0.0.42",
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
@@ -44,9 +44,9 @@ defmodule IndieWeb.MixProject do
       {:apex, "~> 1.2.1", only: [:dev, :test]},
       {:cachex, "~> 3.1.0"},
       {:excoveralls, "~> 0.10.0", only: [:test]},
-      {:ex_doc, "~> 0.19", override: true},
-      {:exvcr, "~> 0.10.0", only: :test},
-      {:faker, "~> 0.12.0", only: :test},
+      {:ex_doc, "~> 0.19", only: [:dev, :test],  runtime: false},
+      {:exvcr, "~> 0.10.0", only: :test, runtime: false},
+      {:faker, "~> 0.12.0", only: :test, runtime: false},
       {:microformats2, "~> 0.2.0"}
     ]
   end
