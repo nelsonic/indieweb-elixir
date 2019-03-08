@@ -153,7 +153,6 @@ defmodule IndieWeb.PostTest do
                  },
                  [:note, :article]
                )
-
     end
 
     test "determines a note" do

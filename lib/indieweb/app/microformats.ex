@@ -1,13 +1,6 @@
-defmodule IndieWeb.App.HxApp do
+defmodule IndieWeb.App.Microformats do
   @behaviour IndieWeb.App.Parser
-  @moduledoc """
-  Parses h-x-app information from a Website.
-
-  Using the specificiation of h-x-app information outlined at 
-  https://indieweb.org/h-x-app. This allows platforms that are
-  richly formatted with said markup to be presented to Koype
-  in a useful manner.
-  """
+  @moduledoc false
 
   alias Microformats2.Utility, as: MF2
 

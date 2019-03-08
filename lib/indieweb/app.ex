@@ -23,7 +23,7 @@ defmodule IndieWeb.App do
     def known() do
       [
         ## Recommended parsers to stop at
-        IndieWeb.App.HxApp,
+        IndieWeb.App.Microformats,
 
         ## Open stopgap solutions
         IndieWeb.App.Link
