@@ -8,7 +8,7 @@ defmodule IndieWeb.MixProject do
       app: :indieweb,
       name: "IndieWeb",
       version: "0.0.42",
-      elixir: "~> 1.7",
+      elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
@@ -24,7 +24,8 @@ defmodule IndieWeb.MixProject do
       homepage_url: "https://indieweb.org/",
       docs: [
         source_url: "https://git.jacky.wtf/indieweb/elixir",
-        source_url_pattern: "https://git.jacky.wtf/indieweb/elixir/src/branch/master/%{path}#L%{line}",
+        source_url_pattern:
+          "https://git.jacky.wtf/indieweb/elixir/src/branch/master/%{path}#L%{line}",
         logo: "priv/static/images/logo.png",
         extras: Path.wildcard("docs/*.markdown")
       ]
@@ -42,12 +43,10 @@ defmodule IndieWeb.MixProject do
     [
       {:apex, "~> 1.2.1", only: [:dev, :test]},
       {:cachex, "~> 3.1.0"},
-      {:credo, "~> 1.0.0", only: [:dev, :test]},
       {:excoveralls, "~> 0.10.0", only: [:test]},
-      {:ex_doc, "~> 0.14.0", only: :dev},
+      {:ex_doc, "~> 0.19", override: true},
       {:exvcr, "~> 0.10.0", only: :test},
       {:faker, "~> 0.12.0", only: :test},
-      {:inch_ex, github: "rrrene/inch_ex", only: [:dev, :test]},
       {:microformats2, "~> 0.2.0"}
     ]
   end
@@ -71,7 +70,7 @@ defmodule IndieWeb.MixProject do
 
   defp aliases do
     [
-      ci: ["test --include slow:true --cover", "coveralls.detail", "inch"]
+      ci: ["test --include slow:true --cover", "coveralls.detail"]
     ]
   end
 end

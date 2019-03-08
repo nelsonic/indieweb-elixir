@@ -97,7 +97,9 @@ defmodule IndieWeb.Webmention do
   def direct_send!(endpoint, target_url, source) do
     with(
       {:ok, source_url} <- resolve_source_url(source),
-      {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}} when code >= 200 and code < 400 <- IndieWeb.Http.post(endpoint,
+      {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}}
+      when code >= 200 and code < 400 <-
+        IndieWeb.Http.post(endpoint,
           body: %{"source" => source_url, "target" => target_url},
           headers: %{"Content-Type" => "application/x-www-form-urlencoded"}
         )
@@ -108,7 +110,7 @@ defmodule IndieWeb.Webmention do
         code: code,
         body: body,
         headers: headers,
-        status: :accepted,
+        status: :accepted
       }
 
       {:ok, send_resp}
