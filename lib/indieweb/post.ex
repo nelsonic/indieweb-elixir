@@ -248,9 +248,9 @@ defmodule IndieWeb.Post do
       properties
       |> Map.get("name", [])
       |> (fn
-        name when is_list(name) -> name
-        name -> [name]
-      end).()
+            name when is_list(name) -> name
+            name -> [name]
+          end).()
       |> Enum.map(&String.trim/1)
       |> Enum.join(" ")
 

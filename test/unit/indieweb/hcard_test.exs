@@ -56,7 +56,9 @@ defmodule IndieWeb.HCardTest do
       <html>
       <body>
       <div class="h-card">
-      <img class="u-photo" src="#{@hcard["photo"]}" alt="#{Faker.Lorem.sentence()}" />
+      <img class="u-photo" src="#{@hcard["photo"]}" alt="#{
+        Faker.Lorem.sentence()
+      }" />
       <a href="#{@url}" class="u-url u-uid">
       <span class="p-name">#{@hcard["name"]}</span>
       </a>

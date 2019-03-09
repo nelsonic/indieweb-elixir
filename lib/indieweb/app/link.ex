@@ -1,12 +1,6 @@
 defmodule IndieWeb.App.Link do
   @behaviour IndieWeb.App.Parser
-  @moduledoc """
-  Extracts information about app from <link> info.
-
-  This takes information stored in the <link rel> bits of the site and uses
-  it to render generic information about the application. It's not the best
-  solution.
-  """
+  @moduledoc false
 
   defp do_fetch(uri) do
     with(

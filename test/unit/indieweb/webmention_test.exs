@@ -211,7 +211,6 @@ defmodule IndieWeb.WebmentionTest do
       end
     end
 
-
     test "fails if source URI could be obtained" do
       assert {:error, :webmention_send_failure, reason: :no_endpoint_found} =
                Subject.send("https://webmention.target/page", :bad_test_source)
