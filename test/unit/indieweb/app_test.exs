@@ -3,7 +3,7 @@ defmodule IndieWeb.AppTest do
   use ExVCR.Mock
   alias IndieWeb.App, as: Subject
 
-  @uri Faker.Internet.url()
+  @uri "https://fake.uri/for-real"
 
   describe ".clear/1" do
     test "clears app information from cache" do

@@ -1,6 +1,6 @@
 defmodule IndieWeb.WebmentionTest do
   use IndieWeb.TestCase, async: false
-  use ExVCR.Mock
+  use IndieWeb.HttpMock
   alias IndieWeb.Webmention, as: Subject
 
   setup do

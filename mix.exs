@@ -35,19 +35,26 @@ defmodule IndieWeb.MixProject do
   def application do
     [
       mod: {IndieWeb.Application, []},
-      extra_applications: [:logger, :cachex, :runtime_tools, :httpotion]
+      extra_applications: [:logger, :cachex, :runtime_tools]
     ]
   end
 
   defp deps do
     [
       {:apex, "~> 1.2.1", only: [:dev, :test]},
-      {:cachex, "~> 3.1.0"},
+      {:cachex, "~> 3.1.0", override: true},
+      {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.10.0", only: [:test]},
-      {:ex_doc, "~> 0.19", only: [:dev, :test],  runtime: false},
       {:exvcr, "~> 0.10.0", only: :test, runtime: false},
       {:faker, "~> 0.12.0", only: :test, runtime: false},
-      {:microformats2, "~> 0.2.0"}
+      {:jason, "~> 1.0"},
+      {:hackney, "~> 1.15.1"},
+      {:microformats2, "~> 0.2.0"},
+      {:tesla,
+       git: "https://github.com/jalcine/tesla",
+       branch: "jalcine/check-regex-run-results",
+       override: true},
+      {:tesla_request_id, "~> 0.2.0"}
     ]
   end
 

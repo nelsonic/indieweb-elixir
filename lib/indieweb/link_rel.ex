@@ -5,11 +5,14 @@ defmodule IndieWeb.LinkRel do
 
   def find(url, value) do
     with(
-      {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}}
+      {:ok, %Tesla.Env{status: code, body: body, opts: opts, headers: headers}}
       when code < 299 and code >= 200 <- IndieWeb.Http.get(url)
     ) do
       header_endpoints =
-        IndieWeb.Http.extract_link_header_values(headers) |> Map.get(value, [])
+        opts
+        |> Keyword.get(:rels, %{})
+        |> Map.get(value, [])
+        |> List.wrap()
 
       rel_endpoints =
         case Microformats2.parse(body, url) do

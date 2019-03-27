@@ -1,67 +1,25 @@
 defmodule IndieWeb.Http do
-  @moduledoc """
-  Provides a facade for handling HTTP actions.
-  """
+  defmodule Error do
+    @moduledoc "Defines an error obtained when making a network request."
+    @enforce_keys ~w(message)a
 
-  def timeout, do: 10_000
+    @typedoc "Representative type of errors with `IndieWeb.Http`."
+    @type t :: %__MODULE__{message: any(), raw: any()}
 
-  @doc "Obtains an implementation of a `IndieWeb.Http.Adapter` module."
-  @spec adapter() :: IndieWeb.HTTP.Adapter.t()
-  def adapter,
-    do:
-      Application.get_env(
-        :indieweb,
-        :http_adapter,
-        IndieWeb.Http.Adapters.HTTPotion
-      )
-
-  @doc "Sends a HTTP request to the URI `uri` with the provided options."
-  @spec request(binary(), atom(), keyword()) ::
-          {:ok, IndieWeb.Http.Response.t()} | {:error, IndieWeb.Http.Error.t()}
-  def request(uri, method \\ :get, opts \\ []) do
-    adapter().request(uri, method, opts)
+    defstruct ~w(message raw)a
   end
 
-  for method <- ~w(get post options head put patch delete)a do
-    @doc """
-    Sends a #{String.upcase(Atom.to_string(method))} request to the specified URI.
+  defmodule Response do
+    @moduledoc "Defines a response obtained when making a network request."
+    @enforce_keys ~w(code body headers raw)a
+    defstruct ~w(body code headers raw)a
 
-    See `request/3` for more information about making requests.
-    """
-    def unquote(method)(uri, opts \\ []),
-      do: IndieWeb.Http.request(uri, unquote(method), opts)
-  end
-
-  def extract_link_header_values(headers) do
-    Map.take(headers, ["link", "Link"])
-    |> Map.values()
-    |> List.flatten()
-    |> Enum.map(fn header -> String.split(header, ",", trim: true) end)
-    |> List.flatten()
-    |> Enum.map(fn header ->
-      [rel, value] =
-        header
-        |> String.trim()
-        |> String.split(";")
-        |> Enum.reverse()
-        |> Enum.map(fn part -> String.trim(part) end)
-
-      rel_values =
-        rel
-        |> String.split("=")
-        |> List.last()
-        |> String.trim("\"")
-        |> String.split()
-
-      link_value =
-        value |> String.trim_leading("<") |> String.trim_trailing(">")
-
-      Enum.map(rel_values, fn rel_value -> {rel_value, link_value} end)
-    end)
-    |> List.flatten()
-    |> Enum.reduce(%{}, fn {key, val}, acc ->
-      Map.put(acc, key, Enum.sort(Map.get(acc, key, []) ++ [val]))
-    end)
+    @type t :: %__MODULE__{
+            body: binary(),
+            code: non_neg_integer,
+            headers: Access.t(),
+            raw: any()
+          }
   end
 
   def make_absolute_uri(path, _) when path in ["", nil], do: path
@@ -72,4 +30,51 @@ defmodule IndieWeb.Http do
 
   def make_absolute_uri(path, base_uri) when is_binary(path),
     do: URI.merge(base_uri, path) |> URI.to_string()
+
+  def extract_link_header_values(%Response{} = resp),
+    do:
+      resp
+      |> Map.get(:raw, %{})
+      |> Map.get(:opts, [])
+      |> Keyword.get(:rels, %{})
+
+  def request(url, method \\ :get, opts \\ []) do
+    case IndieWeb.Http.Client.request([url: url, method: method] ++ opts) do
+      {:ok, %Tesla.Env{} = env} ->
+        {:ok,
+         %Response{
+           raw: env,
+           code: env.status,
+           body: env.body,
+           headers: env.headers
+         }}
+    end
+  end
+
+  for method <- ~w(get post options head put patch delete)a do
+    @doc """
+    Sends a #{String.upcase(Atom.to_string(method))} request to the specified URL.
+
+    See `request/3` for more information about making requests.
+    """
+    def unquote(method)(url, opts \\ []),
+      do: IndieWeb.Http.request(url, unquote(method), opts)
+  end
+
+  defmodule Client do
+    use Tesla
+
+    plug(Tesla.Middleware.DecodeRels)
+    plug(Tesla.Middleware.JSON)
+    plug(Tesla.Middleware.Compression)
+    plug(Tesla.Middleware.KeepRequest)
+    plug(Tesla.Middleware.Logger)
+    plug(Tesla.Middleware.RequestId)
+    plug(Tesla.Middleware.FollowRedirects)
+
+    plug(Tesla.Middleware.Headers, [
+      {"user-agent",
+       "IndieWeb-Elixir/0.0.42 (https://git.jacky.wtf/indieweb/elixir)"}
+    ])
+  end
 end

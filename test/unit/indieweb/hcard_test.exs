@@ -1,6 +1,6 @@
 defmodule IndieWeb.HCardTest do
   use IndieWeb.TestCase, async: false
-  use ExVCR.Mock
+  use IndieWeb.HttpMock
   alias IndieWeb.HCard, as: Subject
 
   @url "https://indieweb.card"
@@ -37,7 +37,7 @@ defmodule IndieWeb.HCardTest do
       <html>
       <body>
       <div class="h-card">
-      <img class="u-photo" src="/photo" alt="#{Faker.Lorem.sentence()}" />
+      <img class="u-photo" src="/photo" alt="A random sentence goes here." />
       <a href="#{@url}" class="u-url u-uid">
       <span class="p-name">#{@hcard["name"]}</span>
       </a>
@@ -56,9 +56,7 @@ defmodule IndieWeb.HCardTest do
       <html>
       <body>
       <div class="h-card">
-      <img class="u-photo" src="#{@hcard["photo"]}" alt="#{
-        Faker.Lorem.sentence()
-      }" />
+      <img class="u-photo" src="#{@hcard["photo"]}" alt="A random sentence goes here." />
       <a href="#{@url}" class="u-url u-uid">
       <span class="p-name">#{@hcard["name"]}</span>
       </a>

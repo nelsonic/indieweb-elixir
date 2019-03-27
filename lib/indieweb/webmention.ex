@@ -59,7 +59,7 @@ defmodule IndieWeb.Webmention do
   """
   @spec discover_endpoint(binary) :: {:ok, binary()} | {:error, any()}
   def discover_endpoint(page_url) do
-    case IndieWeb.LinkRel.find(page_url, "webmention") do
+    case Apex.ap(IndieWeb.LinkRel.find(page_url, "webmention")) do
       list when length(list) != 0 ->
         {:ok, List.first(list)}
 
