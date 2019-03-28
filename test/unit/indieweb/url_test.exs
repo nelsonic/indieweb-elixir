@@ -7,13 +7,13 @@ defmodule IndieWeb.URLTest do
 
   describe ".resolve_redirect/1" do
     test "resolves HTTP to HTTPS" do
-      assert "https://example.com" =
-               Subject.resolve_redirect("http://jacky.wtf")
+      assert "https://jacky.wtf:443/" =
+               Subject.resolve_redirect("http://jacky.wtf/")
     end
 
-    test "resolves 'www'. to '' prefixing"
-    test "resolves to a different path"
-    test "resolves to a different domain"
+    # test "resolves 'www'. to '' prefixing"
+    # test "resolves to a different path"
+    # test "resolves to a different domain"
   end
 
   describe ".canonalize/1" do

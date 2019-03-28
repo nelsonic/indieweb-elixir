@@ -11,13 +11,15 @@ defmodule IndieWeb.Http do
 
   defmodule Response do
     @moduledoc "Defines a response obtained when making a network request."
-    @enforce_keys ~w(code body headers raw)a
-    defstruct ~w(body code headers raw)a
+    @enforce_keys ~w(code body url headers raw)a
+    defstruct ~w(body code url headers rels raw)a
 
     @type t :: %__MODULE__{
-            body: binary(),
+            body: String.t(),
             code: non_neg_integer,
+            url: String.t(),
             headers: Access.t(),
+            rels: map(),
             raw: any()
           }
   end
@@ -42,12 +44,17 @@ defmodule IndieWeb.Http do
     case IndieWeb.Http.Client.request([url: url, method: method] ++ opts) do
       {:ok, %Tesla.Env{} = env} ->
         {:ok,
-         %Response{
+         %IndieWeb.Http.Response{
            raw: env,
            code: env.status,
            body: env.body,
-           headers: env.headers
+           rels: env.opts[:rels] || %{},
+           headers: env.headers,
+           url: env.url
          }}
+
+      {:error, error} ->
+        {:error, %IndieWeb.Http.Error{message: error, raw: nil}}
     end
   end
 
@@ -65,7 +72,6 @@ defmodule IndieWeb.Http do
     use Tesla
 
     plug(Tesla.Middleware.DecodeRels)
-    plug(Tesla.Middleware.JSON)
     plug(Tesla.Middleware.Compression)
     plug(Tesla.Middleware.KeepRequest)
     plug(Tesla.Middleware.Logger)

@@ -41,7 +41,7 @@ defmodule IndieWeb.App.Microformats do
   def resolve(uri) do
     case MF2.fetch(uri) do
       {:ok, mf2_data} -> do_format(mf2_data)
-      false -> {:error, :failed_to_fetch_h_x_app_data}
+      _ -> {:error, :failed_to_fetch_h_x_app_data}
     end
   end
 

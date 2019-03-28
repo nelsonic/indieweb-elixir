@@ -5,20 +5,24 @@ defmodule IndieWeb.LinkRel do
 
   def find(url, value) do
     with(
-      {:ok, %Tesla.Env{status: code, body: body, opts: opts, headers: headers}}
-      when code < 299 and code >= 200 <- IndieWeb.Http.get(url)
+      {:ok, %IndieWeb.Http.Response{body: body, rels: rels, code: code}}
+      when code < 400 <- IndieWeb.Http.get(url)
     ) do
-      header_endpoints =
-        opts
-        |> Keyword.get(:rels, %{})
-        |> Map.get(value, [])
-        |> List.wrap()
+      matching_rel_keys =
+        rels
+        |> Map.keys()
+        |> Enum.filter(fn rel_str ->
+          rel_str |> String.split(" ") |> Enum.member?(value)
+        end)
+
+      prefetched_rel_values =
+        Map.take(rels, matching_rel_keys) |> Map.values() |> List.flatten()
 
       rel_endpoints =
         case Microformats2.parse(body, url) do
           %{rel_urls: rel_url_map} ->
             Enum.filter(rel_url_map, fn {_url, %{rels: rels}} ->
-              value in rels
+              value in rels || Enum.any?(rels, &String.contains?(&1, value))
             end)
             |> Enum.map(fn {key, _} -> key end)
 
@@ -26,7 +30,7 @@ defmodule IndieWeb.LinkRel do
             []
         end
 
-      (header_endpoints ++ rel_endpoints)
+      (prefetched_rel_values ++ rel_endpoints)
       |> Enum.map(&do_normalize_url(&1, url))
     else
       _ -> []

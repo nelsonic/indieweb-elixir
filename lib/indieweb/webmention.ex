@@ -59,7 +59,7 @@ defmodule IndieWeb.Webmention do
   """
   @spec discover_endpoint(binary) :: {:ok, binary()} | {:error, any()}
   def discover_endpoint(page_url) do
-    case Apex.ap(IndieWeb.LinkRel.find(page_url, "webmention")) do
+    case IndieWeb.LinkRel.find(page_url, "webmention") do
       list when length(list) != 0 ->
         {:ok, List.first(list)}
 
@@ -101,7 +101,7 @@ defmodule IndieWeb.Webmention do
       when code >= 200 and code < 400 <-
         IndieWeb.Http.post(endpoint,
           body: %{"source" => source_url, "target" => target_url},
-          headers: %{"Content-Type" => "application/x-www-form-urlencoded"}
+          headers: [{"Content-Type", "application/x-www-form-urlencoded"}]
         )
     ) do
       send_resp = %SendResponse{
