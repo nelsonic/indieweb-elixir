@@ -92,7 +92,7 @@ defmodule IndieWeb.Webmention do
   @doc """
   Sends out a Webmention to the provided `endpoint` for `target` from `source`.
   """
-  @spec send(binary(), any()) ::
+  @spec send(binary(), binary()) ::
           {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
   def direct_send!(endpoint, target_url, source) do
     with(
@@ -100,7 +100,7 @@ defmodule IndieWeb.Webmention do
       {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}}
       when code >= 200 and code < 400 <-
         IndieWeb.Http.post(endpoint,
-          body: %{"source" => source_url, "target" => target_url},
+          body: %{"source" => URI.to_string(source_url), "target" => target_url},
           headers: [{"Content-Type", "application/x-www-form-urlencoded"}]
         )
     ) do
