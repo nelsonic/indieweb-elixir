@@ -25,6 +25,17 @@ defmodule IndieWeb.HttpTest do
     end
   end
 
+  describe ".post_encoded/2" do
+    test "sends a encoded request" do
+      assert {:ok, resp} =
+               Subject.post_encoded("http://httpbin.org/anything",
+                 body: %{"test" => "data"}
+               )
+
+      Apex.ap(resp)
+    end
+  end
+
   describe ".extract_link_rel_from_headers/1" do
     # TODO: There's a bug in Telsa that doesn't allow for multiple rel values.
     test "extracts values from response" do

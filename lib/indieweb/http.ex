@@ -69,7 +69,16 @@ defmodule IndieWeb.Http do
   end
 
   def post_encoded(url, opts) do
-    post(url, opts ++ [middleware: [{Tesla.Middleware.FormUrlEncoded, []}]])
+    post(
+      url,
+      opts ++
+        [
+          body: URI.encode_query(opts[:body]),
+          headers:
+            Keyword.get(opts, :headers, []) ++
+              [{"Content-Type", "application/x-www-form-urlencoded"}]
+        ]
+    )
   end
 
   defmodule Client do
