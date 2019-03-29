@@ -99,9 +99,8 @@ defmodule IndieWeb.Webmention do
       {:ok, source_url} <- resolve_source_url(source),
       {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}}
       when code >= 200 and code < 400 <-
-        IndieWeb.Http.post(endpoint,
-          body: %{"source" => URI.to_string(source_url), "target" => target_url},
-          headers: [{"Content-Type", "application/x-www-form-urlencoded"}]
+        IndieWeb.Http.post_encoded(endpoint,
+          body: %{"source" => URI.to_string(source_url), "target" => target_url}
         )
     ) do
       send_resp = %SendResponse{

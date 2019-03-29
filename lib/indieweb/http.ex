@@ -68,6 +68,10 @@ defmodule IndieWeb.Http do
       do: IndieWeb.Http.request(url, unquote(method), opts)
   end
 
+  def post_encoded(url, opts) do
+    post(url, opts ++ [middleware: [{Tesla.Middleware.FormUrlEncoded, []}]])
+  end
+
   defmodule Client do
     use Tesla
 
