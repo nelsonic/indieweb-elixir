@@ -72,7 +72,6 @@ defmodule IndieWeb.Http do
     use Tesla
 
     plug(Tesla.Middleware.DecodeRels)
-    plug(Tesla.Middleware.Compression)
     plug(Tesla.Middleware.KeepRequest)
     plug(Tesla.Middleware.Logger)
     plug(Tesla.Middleware.RequestId)
