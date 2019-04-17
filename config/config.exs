@@ -6,4 +6,6 @@ config :indieweb,
 
 config :tesla, :adapter, Tesla.Adapter.Hackney
 
+config :mnesia, dir: 'priv/mnesia/#{Mix.env()}/#{node()}'
+
 import_config "#{Mix.env()}.exs"
