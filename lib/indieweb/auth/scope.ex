@@ -12,7 +12,7 @@ defmodule IndieWeb.Auth.Scope do
     do: persist!(code, __MODULE__.to_string(scope))
 
   def persist!(code, scope) do
-    :ok = IndieWeb.Auth.adapter().scope_persist(code, scope)
+    IndieWeb.Auth.adapter().scope_persist(code, scope)
   end
 
   @spec get(binary()) :: binary() | nil
