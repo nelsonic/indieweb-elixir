@@ -6,7 +6,7 @@ defmodule IndieWeb.Application do
     import Supervisor.Spec
 
     children = [
-      worker(Cachex, [:indieweb, []])
+      worker(Cachex, [:indieweb, [limit: 100]])
     ]
 
     opts = [strategy: :one_for_one, name: IndieWeb.Supervisor]
