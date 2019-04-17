@@ -76,12 +76,12 @@ defmodule IndieWeb.Webmention do
 
   [1]: https://www.w3.org/TR/webmention
   """
-  @spec send(binary(), any()) ::
+  @spec send(binary(), any(), map()) ::
           {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
-  def send(target_url, source) do
+  def send(target_url, source, opts \\ %{}) do
     with(
       {:ok, endpoint_url} <- discover_endpoint(target_url),
-      {:ok, resp} <- direct_send!(endpoint_url, target_url, source)
+      {:ok, resp} <- direct_send!(endpoint_url, target_url, source, opts)
     ) do
       {:ok, resp}
     else
@@ -92,15 +92,19 @@ defmodule IndieWeb.Webmention do
   @doc """
   Sends out a Webmention to the provided `endpoint` for `target` from `source`.
   """
-  @spec send(binary(), binary()) ::
+  @spec direct_send!(binary(), binary(), any(), map()) ::
           {:ok, IndieWeb.Webmention.SendResponse.t()} | {:error, any()}
-  def direct_send!(endpoint, target_url, source) do
+  def direct_send!(endpoint, target_url, source, opts) do
     with(
       {:ok, source_url} <- resolve_source_url(source),
       {:ok, %IndieWeb.Http.Response{code: code, body: body, headers: headers}}
       when code >= 200 and code < 400 <-
         IndieWeb.Http.post_encoded(endpoint,
-          body: %{"source" => URI.to_string(source_url), "target" => target_url}
+          body:
+            Map.merge(
+              %{"source" => URI.to_string(source_url), "target" => target_url},
+              opts
+            )
         )
     ) do
       send_resp = %SendResponse{
@@ -126,10 +130,19 @@ defmodule IndieWeb.Webmention do
   a valid action to take from it.
   """
   @spec receive(map()) :: {:ok, [action: atom(), args: map()]} | {:error, any()}
-  def receive([source: source_url, target: target_url] = _args) do
+  def receive(args) do
+    source_url = args[:source]
+    target_url = args[:target]
+
     case resolve_target_from_url(target_url) do
       {:ok, target} ->
-        {:ok, [source: source_url, target: target, target_url: target_url]}
+        {:ok,
+         [
+           source: source_url,
+           target: target,
+           target_url: target_url,
+           args: Keyword.drop(args, ~w(source target)a)
+         ]}
 
       {:error, error} ->
         {:error, :webmention_receive_failure, reason: error}

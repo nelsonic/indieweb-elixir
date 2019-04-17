@@ -25,6 +25,7 @@ defmodule IndieWeb.LinkRel do
               value in rels || Enum.any?(rels, &String.contains?(&1, value))
             end)
             |> Enum.map(fn {key, _} -> key end)
+            |> Enum.uniq()
 
           _ ->
             []

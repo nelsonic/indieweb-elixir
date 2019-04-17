@@ -75,7 +75,10 @@ defmodule IndieWeb.Auth.Adapters.Default do
 
   @impl true
   def scope_persist(code, scope) do
-    :ok = IndieWeb.Cache.set(do_make_scope_key(code), scope, expire: @code_age)
+    case IndieWeb.Cache.set(do_make_scope_key(code), scope, expire: @code_age) do
+      :ok -> :ok
+      _ -> {:error, :scope_not_persisted}
+    end
   end
 
   @impl true

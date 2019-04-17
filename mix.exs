@@ -42,7 +42,7 @@ defmodule IndieWeb.MixProject do
   defp deps do
     [
       {:apex, "~> 1.2.1", only: [:dev, :test]},
-      {:cachex, "~> 3.1.0", override: true},
+      {:cachex, "~> 3.1.0"},
       {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.10.0", only: [:test]},
       {:exvcr, "~> 0.10.0", only: :test, runtime: false},

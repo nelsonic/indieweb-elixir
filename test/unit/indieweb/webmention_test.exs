@@ -236,7 +236,8 @@ defmodule IndieWeb.WebmentionTest do
       assert [
                source: "https://webmention.target/source",
                target: :fake_source,
-               target_url: "https://target.indieweb/fake"
+               target_url: "https://target.indieweb/fake",
+               args: []
              ] = resp
     end
 
