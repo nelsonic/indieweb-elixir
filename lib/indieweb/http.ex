@@ -38,7 +38,7 @@ defmodule IndieWeb.Http do
       resp
       |> Map.get(:raw, %{})
       |> Map.get(:opts, [])
-      |> Keyword.get(:rels, [])
+      |> Keyword.get(:rels, %{})
 
   def request(url, method \\ :get, opts \\ []) do
     case IndieWeb.Http.Client.request([url: url, method: method] ++ opts) do
