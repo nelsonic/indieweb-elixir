@@ -38,7 +38,7 @@ defmodule IndieWeb.Http do
       resp
       |> Map.get(:raw, %{})
       |> Map.get(:opts, [])
-      |> Keyword.get(:rels, %{})
+      |> Keyword.get(:rels, %{}) || %{}
 
   def request(url, method \\ :get, opts \\ []) do
     case IndieWeb.Http.Client.request([url: url, method: method] ++ opts) do
@@ -83,6 +83,13 @@ defmodule IndieWeb.Http do
 
   defmodule Client do
     use Tesla
+
+    adapter(Tesla.Adapter.Hackney,
+      recv_timeout: 30_000,
+      ssl: [
+        versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"]
+      ]
+    )
 
     plug(Tesla.Middleware.Logger)
     plug(Tesla.Middleware.RequestId)
